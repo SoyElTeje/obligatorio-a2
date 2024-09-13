@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tads/HashEjercicio1.cpp"
+#include "tads/HashEjercicio2.cpp"
 
 int main() {
     TablaHash tabla(100);
@@ -9,5 +9,13 @@ int main() {
     cout << tabla.recuperar("asd") << endl;
     cout << tabla.recuperar("dsa") << endl;
     cout << tabla.recuperar("qwe") << endl;
+
+    cout << tabla.informe() << endl;
+
+    cout << tabla.cambioEstado("asd") << endl;
+    cout << tabla.informe() << endl;
+    cout << tabla.cambioEstado("asd") << endl;
+    cout << tabla.informe() << endl;
+    cout << tabla.cambioEstado("epicooo") << endl;
     return 0;
 }
