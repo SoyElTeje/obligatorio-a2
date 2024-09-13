@@ -17,6 +17,8 @@ private:
     int largo;
     Libro** tabla;
     bool* ocupado;
+    int habilidados;
+    int deshabilitados;
 
     int hash1(string clave) {
         int hash = 0;
@@ -58,7 +60,9 @@ private:
             tabla[pos] = new Libro();
             tabla[pos]->id = id;
             tabla[pos]->titulo = titulo;
+            tabla[pos]->disponible = true;
             ocupado[pos] = true;
+            habilidados++;
         }
         else {
             if(tabla[pos]->id == id) {
@@ -75,15 +79,22 @@ private:
                 intento++;
             }
             if (ocupado[pos]) {
-                throw runtime_error("Intento de inserción en tabla llena");
+                if (tabla[pos]->id == id) {
+                    tabla[pos]->titulo = titulo;
+                    tabla[pos]->disponible = true;
+                } else {
+                    throw runtime_error("Intento de inserción en tabla llena");
+                }
             } else {
                 tabla[pos] = new Libro();
                 tabla[pos]->id = id;
                 tabla[pos]->titulo = titulo;
                 ocupado[pos] = true;
             }
+            habilidados++;
         }
     }
+
     string recuperarAux(string id) {
         int pos = hash1(id);
         if(ocupado[pos] && tabla[pos]->id == id) {
@@ -101,12 +112,46 @@ private:
         return "libro_no_encontrado";
     }
 
+    string cambioEstadoAux(string id) {
+        int pos = hash1(id);
+        if(ocupado[pos] && tabla[pos]->id == id) {
+            tabla[pos]->disponible = !tabla[pos]->disponible;
+            if(tabla[pos]->disponible) {
+                habilidados++;
+                deshabilitados--;
+            } else {
+                habilidados--;
+                deshabilitados++;
+            }
+            return tabla[pos]->disponible ? "cambio_a_libro_disponible" : "cambio_a_libro_no_disponible";
+        }
+        int pos2 = hash2(id);
+        int intento = 0;
+        while (ocupado[pos] && intento < largo) {
+            pos = (pos + intento * pos2) % largo;
+            intento++;
+            if(ocupado[pos] && tabla[pos]->id == id) {
+                tabla[pos]->disponible = !tabla[pos]->disponible;
+                if(tabla[pos]->disponible) {
+                    habilidados++;
+                    deshabilitados--;
+                } else {
+                    habilidados--;
+                    deshabilitados++;
+                }
+                return tabla[pos]->disponible ? "cambio_a_libro_disponible" : "cambio_a_libro_no_disponible";
+            }
+        }
+        return "libro_no_encontrado";
+    }
 public:
     TablaHash(int tamano) {
         largo = this->siguientePrimo(tamano);
-        tabla = new Libro*[largo];  // Cambiamos 'tamano' por 'largo'
-        ocupado = new bool[largo];  // Cambiamos 'tamano' por 'largo'
-        for (int i = 0; i < largo; i++) {  // Usamos 'largo' en lugar de 'tamano'
+        tabla = new Libro*[largo];
+        ocupado = new bool[largo];
+        habilidados = 0;
+        deshabilitados = 0;
+        for (int i = 0; i < largo; i++) {
             tabla[i] = nullptr;
             ocupado[i] = false;
         }
@@ -137,6 +182,14 @@ public:
 
     string recuperar(string id) {
         return recuperarAux(id);
+    }
+
+    string informe() {
+        return "Libros habilitados: " + to_string(habilidados) + ", libros deshabilitados: " + to_string(deshabilitados);
+    }
+
+    string cambioEstado(string id) {
+        return cambioEstadoAux(id);
     }
 };
 
