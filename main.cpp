@@ -3,19 +3,19 @@
 
 int main() {
     TablaHash tabla(100);
-    tabla.insertar("asd", "Libro 1");
-    tabla.insertar("dsa", "Libro 2");
+    tabla.insertar(1, "Libro 1");
+    tabla.insertar(2, "Libro 2");
     tabla.imprimir();
-    cout << tabla.recuperar("asd") << endl;
-    cout << tabla.recuperar("dsa") << endl;
-    cout << tabla.recuperar("qwe") << endl;
+    tabla.recuperar(1);
+    tabla.recuperar(2);
+    tabla.recuperar(3);
 
     cout << tabla.informe() << endl;
 
-    cout << tabla.cambioEstado("asd") << endl;
-    cout << tabla.informe() << endl;
-    cout << tabla.cambioEstado("asd") << endl;
-    cout << tabla.informe() << endl;
-    cout << tabla.cambioEstado("epicooo") << endl;
+    tabla.cambioEstado(1);
+    tabla.informe();
+    tabla.cambioEstado(1);
+    tabla.informe();
+    tabla.cambioEstado(3);
     return 0;
 }
