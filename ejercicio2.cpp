@@ -9,7 +9,8 @@ int main()
     cin >> cantidadElementos;
     TablaHash tabla(cantidadElementos);
     string entrada = "";
-    while(cin >> entrada) {
+    for (int i = 0; i < cantidadElementos; i++) {
+        cin >> entrada;
         if(entrada == "ADD") {
             int id;
             string titulo;
@@ -26,6 +27,9 @@ int main()
             int id;
             cin >> id;
             tabla.cambioEstado(id);
+        }
+        else if (entrada == "COUNT") {
+            tabla.informe();
         }
     }
     return 0;
