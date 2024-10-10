@@ -50,36 +50,36 @@ private:
     }
 
     void rehash() {
-    int nuevoLargo = siguientePrimo(largo * 2);
-    Libro** nuevaTabla = new Libro*[nuevoLargo];
-    bool* nuevoOcupado = new bool[nuevoLargo];
+        int nuevoLargo = siguientePrimo(largo * 2);
+        Libro** nuevaTabla = new Libro*[nuevoLargo];
+        bool* nuevoOcupado = new bool[nuevoLargo];
 
-    for(int i = 0; i < nuevoLargo; i++) {
-        nuevaTabla[i] = NULL;
-        nuevoOcupado[i] = false;
-    }
-
-    for(int i = 0; i < largo; i++) {
-        if(ocupado[i]) {
-            int nuevoPos1 = hash1(tabla[i]->id);
-            int nuevoPos2 = hash2(tabla[i]->id);
-            int intento = 0;
-            int nuevoPos = nuevoPos1;
-            while (nuevoOcupado[nuevoPos] && intento < nuevoLargo) {
-                intento++;
-                nuevoPos = (nuevoPos1 + intento * nuevoPos2) % nuevoLargo;
-            }
-            nuevaTabla[nuevoPos] = tabla[i];
-            nuevoOcupado[nuevoPos] = true;
+        for(int i = 0; i < nuevoLargo; i++) {
+            nuevaTabla[i] = NULL;
+            nuevoOcupado[i] = false;
         }
-    }
-    delete[] tabla;
-    delete[] ocupado;
 
-    tabla = nuevaTabla;
-    ocupado = nuevoOcupado;
-    largo = nuevoLargo;
-}
+        for(int i = 0; i < largo; i++) {
+            if(ocupado[i]) {
+                int nuevoPos1 = hash1(tabla[i]->id);
+                int nuevoPos2 = hash2(tabla[i]->id);
+                int intento = 0;
+                int nuevoPos = nuevoPos1;
+                while (nuevoOcupado[nuevoPos] && intento < nuevoLargo) {
+                    intento++;
+                    nuevoPos = (nuevoPos1 + intento * nuevoPos2) % nuevoLargo;
+                }
+                nuevaTabla[nuevoPos] = tabla[i];
+                nuevoOcupado[nuevoPos] = true;
+            }
+        }
+        delete[] tabla;
+        delete[] ocupado;
+
+        tabla = nuevaTabla;
+        ocupado = nuevoOcupado;
+        largo = nuevoLargo;
+    }
 
     
     void insertarAux(int id, string titulo) {
