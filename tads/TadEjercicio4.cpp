@@ -15,13 +15,14 @@ struct Posicion {
     int posicion;
 };
 
-class TablaHash
-{
+class ColaPrioridad {
     private:
         int largo;
         Posicion** tabla;
         bool* ocupado;
         int cantidad;
+        int primeroLibre;
+        Pedido** vec;
 
         int hash1(int id) {
             const double A = 0.6180339887;
@@ -51,41 +52,7 @@ class TablaHash
             }
         }
 
-        void rehash() {
-            int nuevoLargo = siguientePrimo(largo * 2);
-            Posicion** nuevaTabla = new Posicion*[nuevoLargo];
-            bool* nuevoOcupado = new bool[nuevoLargo];
-
-            for(int i = 0; i < nuevoLargo; i++) {
-                nuevaTabla[i] = NULL;
-                nuevoOcupado[i] = false;
-            }
-
-            for(int i = 0; i < largo; i++) {
-                if(ocupado[i]) {
-                    int nuevoPos1 = hash1(tabla[i]->id);
-                    int nuevoPos2 = hash2(tabla[i]->id);
-                    int intento = 0;
-                    int nuevoPos = nuevoPos1;
-                    while (nuevoOcupado[nuevoPos] && intento < nuevoLargo) {
-                        intento++;
-                        nuevoPos = (nuevoPos1 + intento * nuevoPos2) % nuevoLargo;
-                    }
-                    nuevaTabla[nuevoPos] = tabla[i];
-                    nuevoOcupado[nuevoPos] = true;
-                }
-            }
-            delete[] tabla;
-            delete[] ocupado;
-
-            tabla = nuevaTabla;
-            ocupado = nuevoOcupado;
-            largo = nuevoLargo;
-        }
-
         void insertarTablaAux(int id, int posicionDelHeap) {
-            double factorCarga = static_cast<double>(cantidad) / largo;
-            if (factorCarga > 0.7) rehash();
             int pos1 = hash1(id);
             int pos = pos1;
             if (!ocupado[pos]) {
@@ -104,6 +71,7 @@ class TablaHash
                 }
                 if (ocupado[pos]) {
                     if (tabla[pos]->id == id) {
+                        tabla[pos]->posicion = posicionDelHeap;
                     } else {
                         throw runtime_error("Intento de inserción en tabla llena");
                     }
@@ -135,7 +103,7 @@ class TablaHash
             throw runtime_error("pedido no encontrado");
         }
 
-        void eliminarTablaHash(int id) {
+        void eliminarEnTablaHash(int id) {
             int pos1 = hash1(id);
             int pos = pos1;
             bool encontrado = false;
@@ -168,47 +136,8 @@ class TablaHash
             }
         }
 
-    public:
-        TablaHash(int tam) {
-            largo = tam;
-            tabla = new Posicion*[largo];
-            ocupado = new bool[largo];
-            cantidad = 0;
-            for(int i = 0; i < largo; i++) {
-                tabla[i] = NULL;
-                ocupado[i] = false;
-            }
-        }
-
-        ~TablaHash() {
-            for(int i = 0; i < largo; i++) {
-                if(ocupado[i]) {
-                    delete tabla[i];
-                }
-            }
-            delete[] tabla;
-            delete[] ocupado;
-        }
-
-        void insertarTabla(int id, int posicionDelHeap) {
-            insertarTablaAux(id, posicionDelHeap);
-        }
-
-        void eliminarPedido(int id) {
-            eliminarTablaHash(id);
-        }
-};
-
-
-class MinHeap{
-    private:
-        int capacidad;
-        int primeroLibre;
-        Pedido** vec;
-
-
         bool estaLleno(){
-            return primeroLibre > capacidad;
+            return primeroLibre > largo;
         }
 
         bool estaVacio(){
@@ -220,22 +149,22 @@ class MinHeap{
         }
 
         bool comparar(int posPadre, int pos){
-            Pedido* primero = vec[posPadre];
-            Pedido* segundo = vec[pos];
-            if(primero->paraLlevar && !segundo->paraLlevar) {
-                return true;
-            }
-            if(!primero->paraLlevar && segundo->paraLlevar) {
+            Pedido* padre = vec[posPadre];
+            Pedido* hijo = vec[pos];
+            if(padre->paraLlevar && !padre->paraLlevar) {
                 return false;
             }
-            if(primero->prioridad < segundo->prioridad) {
+            if(!padre->paraLlevar && hijo->paraLlevar) {
                 return true;
             }
-            if(primero->prioridad > segundo->prioridad) {
+            if(padre->prioridad < hijo->prioridad) {
+                return true;
+            }
+            if(padre->prioridad > hijo->prioridad) {
                 return false;
             }
-            if(primero->prioridad == segundo->prioridad) {
-                return primero->id < segundo->id;
+            if(padre->prioridad == hijo->prioridad) {
+                return padre->id > hijo->id;
             }
         }
 
@@ -245,261 +174,118 @@ class MinHeap{
             vec[pos] = aux;
         }
 
-        void flotar(int pos, int*& posicionFinal){
+        void flotar(int pos){
             if (pos == 1) {
-                posicionFinal = &pos;
+                insertarTablaAux(vec[pos]->id, pos);
                 return;
             };
             int posPadre = padre(pos);
             if (comparar(posPadre, pos)){
                 intercambiar(posPadre, pos);
-                flotar(posPadre, posicionFinal);
+                insertarTablaAux(vec[pos]->id, pos);
+                flotar(posPadre);
             }
             else {
-                posicionFinal = &pos;
+                insertarTablaAux(vec[pos]->id, pos);
+            }
+        }
+
+        void hundir(int pos){
+            int posHijoIzq = pos * 2;
+            int posHijoDer = pos * 2 + 1;
+            if (posHijoIzq >= primeroLibre) {
+                return;
+            }
+            if (posHijoDer >= primeroLibre) {
+                if (comparar(pos, posHijoIzq)) {
+                    intercambiar(pos, posHijoIzq);
+                    insertarTablaAux(vec[pos]->id, pos);
+                    insertarTablaAux(vec[posHijoIzq]->id, posHijoIzq);
+                    hundir(posHijoIzq);
+                }
+                else {
+                    insertarTablaAux(vec[pos]->id, pos);
+                }
+                return;
+            }
+            if (comparar(posHijoIzq, posHijoDer)) {
+                if (comparar(pos, posHijoIzq)) {
+                    intercambiar(pos, posHijoIzq);
+                    insertarTablaAux(vec[pos]->id, pos);
+                    insertarTablaAux(vec[posHijoIzq]->id, posHijoIzq);
+                    hundir(posHijoIzq);
+                }
+                else {
+                    insertarTablaAux(vec[pos]->id, pos);
+                }
+            }
+            else {
+                if (comparar(pos, posHijoDer)) {
+                    intercambiar(pos, posHijoDer);
+                    insertarTablaAux(vec[pos]->id, pos);
+                    insertarTablaAux(vec[posHijoDer]->id, posHijoDer);
+                    hundir(posHijoDer);
+                }
+                else {
+                    insertarTablaAux(vec[pos]->id, pos);
+                }
             }
         }
 
     public:
-        MinHeap(int tam){
+
+        ColaPrioridad(int tam){
+            largo = tam;
+            tabla = new Posicion*[largo];
+            ocupado = new bool[largo];
+            cantidad = 0;
+            for(int i = 0; i < largo; i++) {
+                tabla[i] = NULL;
+                ocupado[i] = false;
+            }
             vec = new Pedido*[tam + 1];
             primeroLibre = 1;
-            capacidad = tam;
         }
-        
-        ~MinHeap(){
+
+        ~ColaPrioridad(){
+            for(int i = 0; i < largo; i++) {
+                if(ocupado[i]) {
+                    delete tabla[i];
+                }
+            }
+            delete[] tabla;
+            delete[] ocupado;
             delete[] vec;
         }
 
-        int* insertar(Pedido* p){
-            int* posicionFinal = new int;
+        void insertar(Pedido* p){
             if(!estaLleno()) {
                 vec[primeroLibre] = p;
-                flotar(primeroLibre, posicionFinal);
+                flotar(primeroLibre);
                 primeroLibre++;
-            }
-            else {
-                posicionFinal = 0;
-            }
-            return posicionFinal;
-        }
-
-        void imprimir(){
-            cout << "A ver si funciona" << endl;
-            cout << "La capacidad es " << capacidad << endl;
-            cout << "Cantidad de elementos " << primeroLibre - 1 << endl;
-            for(int i = 1; i < primeroLibre; i++) {
-                cout << "[" << vec[i]->id << ": " << vec[i]->items << " " << vec[i]->paraLlevar << " " << vec[i]->prioridad <<  "]" << endl;
-            }
-        }
-};
-
-class ColaPrioridad {
-    private:
-        MinHeap* heap;
-        TablaHash* tabla;
-
-    public:
-        ColaPrioridad(int tam) {
-            heap = new MinHeap(tam);
-            tabla = new TablaHash(tam);
-        }
-
-        ~ColaPrioridad() {
-            delete heap;
-            delete tabla;
-        }
-
-        void agregarPedido(int id, int prioridad, bool paraLlevar, string items) {
-            Pedido* nuevoPedido = new Pedido();
-            nuevoPedido->id = id;
-            nuevoPedido->prioridad = prioridad;
-            nuevoPedido->paraLlevar = paraLlevar;
-            nuevoPedido->items = items;
-            int* posicionFinal = heap->insertar(nuevoPedido);
-            if (posicionFinal) {
-                tabla->insertarTabla(id, *posicionFinal);
-            } else {
-                throw runtime_error("Heap lleno");
             }
         }
 
         void imprimir() {
-            heap->imprimir();
+            cout << "La capacidad es " << largo << endl;
+            cout << "Cantidad de elementos " << primeroLibre - 1 << endl;
+            for(int i = 1; i < primeroLibre; i++) {
+                cout << "[posicion del heap: " << i << " posicion en hash: " << recuperarPosPedido(vec[i]->id) << " " << vec[i]->id << ": " << vec[i]->items << " " << (vec[i]->paraLlevar?"true":"false") << " " << vec[i]->prioridad <<  "]" << endl;
+            }
+        }
+
+        void entregarPedido() {
+            Pedido* p = vec[1];
+            cout << p->id << " " << p->prioridad << " " << (p->paraLlevar? "true" : "false") << " " << p->items << endl;
+            eliminarEnTablaHash(p->id);
+            vec[1] = vec[primeroLibre - 1];
+            primeroLibre--;
+            hundir(1);
+        }
+
+        void hacerParaLlevar(int id) {
+            int pos = recuperarPosPedido(id);
+            vec[pos]->paraLlevar = true;
+            flotar(pos);
         }
 };
-
-
-
-/*
-class ColaPrioridad
-{
-    private:
-        Pedido* cola;
-        int largo;
-        int cantidad;
-        Posicion** tabla;
-        bool* ocupado;
-    
-        int hash1(int id) {
-            const double A = 0.6180339887;
-            double hashVal = id * A;
-            hashVal = hashVal - int(hashVal);
-            return int(hashVal * largo);
-        }
-
-        int hash2(int id) {
-            return 1 + (id % (largo - 2));
-        }
-
-        int siguientePrimo(int n) {
-        int primo = n + 1;
-        while (true) {
-            bool esPrimo = true;
-            for (int i = 2; i * i <= primo; i++) {
-                if (primo % i == 0) {
-                    esPrimo = false;
-                    break;
-                }
-            }
-            if (esPrimo) {
-                return primo;
-            }
-            primo++;
-        }
-    }
-
-    void rehash() {
-        int nuevoLargo = siguientePrimo(largo * 2);
-        Posicion** nuevaTabla = new Posicion*[nuevoLargo];
-        bool* nuevoOcupado = new bool[nuevoLargo];
-
-        for(int i = 0; i < nuevoLargo; i++) {
-            nuevaTabla[i] = NULL;
-            nuevoOcupado[i] = false;
-        }
-
-        for(int i = 0; i < largo; i++) {
-            if(ocupado[i]) {
-                int nuevoPos1 = hash1(tabla[i]->id);
-                int nuevoPos2 = hash2(tabla[i]->id);
-                int intento = 0;
-                int nuevoPos = nuevoPos1;
-                while (nuevoOcupado[nuevoPos] && intento < nuevoLargo) {
-                    intento++;
-                    nuevoPos = (nuevoPos1 + intento * nuevoPos2) % nuevoLargo;
-                }
-                nuevaTabla[nuevoPos] = tabla[i];
-                nuevoOcupado[nuevoPos] = true;
-            }
-        }
-        delete[] tabla;
-        delete[] ocupado;
-
-        tabla = nuevaTabla;
-        ocupado = nuevoOcupado;
-        largo = nuevoLargo;
-    }
-
-    void insertarTablaAux(int id, string items, int posicionDelHeap) {
-        double factorCarga = static_cast<double>(cantidad) / largo;
-        if (factorCarga > 0.7) rehash();
-        int pos1 = hash1(id);
-        int pos2 = hash2(id);
-        int pos = pos1;
-        if (!ocupado[pos1]) {
-            int intento = 1;
-            while(intento < largo && ocupado[pos]) {
-                pos = (pos1 + intento * pos2) % largo;
-                intento++;
-            }
-            if(!ocupado[pos]) {
-                tabla[pos] = new Posicion();
-                tabla[pos]->id = id;
-                tabla[pos]->items = items;
-                tabla[pos]->posicion = posicionDelHeap;
-                ocupado[pos] = true;
-                cantidad++;
-            }
-            else {
-                cout << "tabla_llena" << endl;
-            }
-        }
-    }
-
-    void eliminarTablaHash(int id) {
-        int pos1 = hash1(id);
-        int pos = pos1;
-        bool encontrado = false;
-
-        if(ocupado[pos] && tabla[pos]->id == id) {
-            encontrado = true;
-        } else {
-            int pos2 = hash2(id);
-            int intento = 1;
-            while (intento < largo) {
-                pos = (pos1 + intento * pos2) % largo;
-                if (!ocupado[pos]) {
-                    break;
-                }
-                if (tabla[pos]->id == id) {
-                    encontrado = true;
-                    break;
-                }
-                intento++;
-            }
-        }
-
-        if (encontrado) {
-            delete tabla[pos];
-            tabla[pos] = NULL;
-            ocupado[pos] = false;
-            cantidad--;
-        } else {
-            throw runtime_error ("pedido no encontrado");
-        }
-    }
-
-    int recuperarPosicionTabla(int id) {
-        int pos1 = hash1(id);
-        int pos = pos1;
-        if(ocupado[pos] && tabla[pos]->id == id) {
-            return tabla[pos]->posicion;
-        }
-        int pos2 = hash2(id);
-        int intento = 1;
-        while (intento < largo) {
-            pos = (pos1 + intento * pos2) % largo;
-            if(ocupado[pos] && tabla[pos]->id == id) {
-                return tabla[pos]->posicion;
-            }
-            intento++;
-        }
-        throw runtime_error("pedido no encontrado");
-    }
-
-    Pedido peek(){
-        return cola[1];
-    }
-
-    void eliminarHeap() {
-        cola[1] = cola[Cantidad];
-        cantidad--;
-
-    }
-
-    void insertarHeap(Pedido p) {
-
-    }
-
-    void agregarPedido(int id, int prioridad, bool paraLlevar, string items) {
-        Pedido* nuevoPedido = new Pedido();
-        nuevoPedido->id = id;
-        nuevoPedido->prioridad = prioridad;
-        nuevoPedido->paraLlevar = paraLlevar;
-        nuevoPedido->items = items;
-
-    }
-
-};
-*/
