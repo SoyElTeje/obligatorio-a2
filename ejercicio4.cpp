@@ -12,34 +12,32 @@ int main()
     int cantidadOperaciones;
     cin >> cantidadPedidos;
     cin >> cantidadOperaciones;
-    cout << cantidadOperaciones;
     ColaPrioridad* cp = new ColaPrioridad(cantidadPedidos);
     string entrada;
     for(int i = 0; i < cantidadOperaciones; i++) {
         cin >> entrada;
-        cout << entrada;
         if (entrada == "I") {
             int id;
             int prioridad;
-            bool paraLlevar;
+            string paraLlevar;
             string items;
             cin >> id >> prioridad >> paraLlevar >> items;
-            cout << id << endl;
-            cout << prioridad << endl;
-            cout << paraLlevar << endl;
-            cout << items << endl;
-            cp->insertar(new Pedido{id, prioridad, paraLlevar, items});
+            cp->insertar(new Pedido{id, prioridad, paraLlevar == "true", items});
         }
         else if (entrada == "E") {
-            cout << "Entregando pedido" << endl;
-            cp->entregarPedido();
+            int id;
+            cin >> id;
+            cp->entregarPedido(id);
         }
         else if (entrada == "C") {
             int id;
             cin >> id;
             cp->hacerParaLlevar(id);
         }
-        
+        else if (entrada == "P") {
+            cp->imprimir();
+        }
     }
+    cp->imprimirLosQueFaltan();
     return 0;
 }
