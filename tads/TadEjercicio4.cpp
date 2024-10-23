@@ -331,14 +331,6 @@ class ColaPrioridad {
             }
         }
 
-        void imprimir() {
-            cout << "La capacidad es " << largo << endl;
-            cout << "Cantidad de elementos " << primeroLibre - 1 << endl;
-            for(int i = 1; i < primeroLibre; i++) {
-                cout << "[posicion del heap: " << i << " posicion en hash: " << recuperarPosPedido(vec[i]->id) << " " << vec[i]->id << ": " << vec[i]->items << " " << (vec[i]->paraLlevar?"true":"false") << " " << vec[i]->prioridad <<  "]" << endl;
-            }
-        }
-
         void entregarPedido(int p) {
             int pos = recuperarPosPedido(p);
             eliminarEnTablaHash(p);
