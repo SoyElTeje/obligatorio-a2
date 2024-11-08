@@ -14,6 +14,10 @@ class AVL {
       nodoAVL* der;
     };
 
+    int cantidadLibros = 0;
+    int cantidadHab = 0;
+    int cantidadDes = 0;
+
     nodoAVL* raiz;
 
     int max(int a, int b) {
@@ -75,12 +79,16 @@ class AVL {
         nuevo->der = NULL;
         nuevo->izq = NULL;
         nuevo->altura = 1;
+        cantidadLibros++;
+        cantidadHab++;
         return nuevo;
       }
 
       if (nodo->id == id) {
         nodo->titulo = libroTitulo;
         nodo->estado = true;
+        cantidadHab++;
+        cantidadDes--;
         return nodo;
       }
 
@@ -148,6 +156,13 @@ class AVL {
       }
 
       if (nodo->id == id) {
+        if (nodo->estado) {
+          cantidadDes++;
+          cantidadHab--;
+        } else {
+          cantidadDes--;
+          cantidadHab++;
+        }
         nodo->estado = !nodo->estado;
       }
 
