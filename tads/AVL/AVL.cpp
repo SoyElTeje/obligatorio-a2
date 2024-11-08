@@ -26,6 +26,21 @@ class AVL {
       return 1 + max(altura(nodo->izq), altura(nodo->der));
     }
 
+    int calculoBalance(nodoAVL* nodo) {
+      int alturaDer = nodo->der ? nodo->der->altura : 0;
+      int alturaIzq = nodo->izq ? nodo->izq->altura : 0;
+
+      int diferencia = alturaIzq - alturaDer;
+
+      /*
+      Interpretacion de la diferencia:
+        diferencia igual a 0, -1 o 1: el arbol esta balanceado
+        diferencia < -1: desbalance hacia la derecha
+        diferencia > 1: desbalance hacia la izquierda
+      */
+      return diferencia;
+    }
+
     nodoAVL* insertarAux(int id, string libroTitulo, nodoAVL* nodo) {
       if (!nodo) {
         nodoAVL* nuevo = new nodoAVL;
@@ -52,6 +67,10 @@ class AVL {
       }
 
       nodo->altura = 1 + max(altura(nodo->izq), altura(nodo->der));
+
+      int balance = calculoBalance(nodo);
+      bool balanceIzq = balance < -1;
+      bool balanceDer = balance > 1;
     }
 
   public:
