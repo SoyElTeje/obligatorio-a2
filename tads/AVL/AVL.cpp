@@ -116,6 +116,9 @@ class AVL {
           return rotacionAntihoraria(nodo);
         }
       }
+      
+      // En caso de no haber rotacion
+      return nodo;
     }
 
   public:
