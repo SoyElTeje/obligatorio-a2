@@ -129,18 +129,19 @@ class AVL {
       return nodo;
     }
 
-    void buscarAux(int id, nodoAVL* nodo) {
+    bool buscarAux(int id, nodoAVL* nodo) {
       if (!nodo) {
-        cout << 'libro_no_encontrado' << endl;
+        cout << "libro_no_encontrado" << endl;
       }
 
       if (nodo->id == id) {
         cout << nodo->titulo << endl;
         if (nodo->estado) {
-          cout << 'H' << endl;
+          cout << "H" << endl;
         } else {
-          cout << 'D' << endl;
+          cout << "D" << endl;
         }
+        return true;
       }
 
       if (nodo->id < id) {
@@ -148,11 +149,13 @@ class AVL {
       } else {
         buscarAux(id, nodo->izq);
       }
+
+      return false;
     }
 
     void cambiarAux(int id, nodoAVL* nodo) {
       if (!nodo) {
-        cout << 'libro_no_encontrado' << endl;
+        cout << "libro_no_encontrado" << endl;
       }
 
       if (nodo->id == id) {
@@ -180,7 +183,7 @@ class AVL {
 
 
     bool buscar(int id) {
-      buscarAux(id, raiz);
+      return buscarAux(id, raiz);
     }
 
     void cambiarEstado(int id) {
@@ -188,6 +191,6 @@ class AVL {
     }
 
     void cantLibrosHabilitados() {
-      cout << cantidadLibros + ' ' + cantidadHab + ' ' + cantidadDes << endl;
+      cout << cantidadLibros << " " << cantidadHab << " " << cantidadDes << endl;
     }
 };
