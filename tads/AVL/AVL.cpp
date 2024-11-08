@@ -142,18 +142,34 @@ class AVL {
       }
     }
 
+    void cambiarAux(int id, nodoAVL* nodo) {
+      if (!nodo) {
+        cout << 'libro_no_encontrado' << endl;
+      }
+
+      if (nodo->id == id) {
+        nodo->estado = !nodo->estado;
+      }
+
+      if (nodo->id < id) {
+        cambiarAux(id, nodo->der);
+      } else {
+        cambiarAux(id, nodo->izq);
+      }
+    }
+
   public:
     void insertar(int id, string titulo) {
       raiz = insertarAux(id, titulo, raiz);
     }
 
 
-    void buscar(int id) {
+    bool buscar(int id) {
       buscarAux(id, raiz);
     }
 
-    void cambiarEstado() {
-
+    void cambiarEstado(int id) {
+      cambiarAux(id, raiz);
     }
 
     int cantLibrosHabilitados() {
