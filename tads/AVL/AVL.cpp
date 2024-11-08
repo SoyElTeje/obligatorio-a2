@@ -16,8 +16,14 @@ class AVL {
 
     nodoAVL* raiz;
 
-    bool esBalanceado() {
+    int max(int a, int b) {
+      return a > b ? a : b;
+    }
 
+    int altura(nodoAVL* nodo) {
+      if (!nodo) return 0;
+
+      return 1 + max(altura(nodo->izq), altura(nodo->der));
     }
 
     nodoAVL* insertarAux(int id, string libroTitulo, nodoAVL* nodo) {
@@ -45,9 +51,7 @@ class AVL {
         nodo->izq = insertarAux(id, libroTitulo, nodo->izq);
       }
 
-      if (esBalanceado()) {
-
-      }
+      nodo->altura = 1 + max(altura(nodo->izq), altura(nodo->der));
     }
 
   public:
