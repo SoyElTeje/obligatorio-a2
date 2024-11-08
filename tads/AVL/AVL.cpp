@@ -187,7 +187,7 @@ class AVL {
       cambiarAux(id, raiz);
     }
 
-    int cantLibrosHabilitados() {
-
+    void cantLibrosHabilitados() {
+      cout << cantidadLibros + ' ' + cantidadHab + ' ' + cantidadDes << endl;
     }
 };
