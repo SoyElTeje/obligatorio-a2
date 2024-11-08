@@ -26,6 +26,32 @@ class AVL {
       return 1 + max(altura(nodo->izq), altura(nodo->der));
     }
 
+    nodoAVL* rotacionHoraria(nodoAVL* B) {
+      nodoAVL* A = B->izq;
+      nodoAVL* T2 = A->der;
+      A->der = B;
+      B->izq = T2;
+
+      A->altura = altura(A);
+      B->altura = altura(B);
+
+      return A;
+    }
+
+    nodoAVL* rotacionAntihoraria(nodoAVL* A) {
+      nodoAVL* B = A->der;
+      nodoAVL* T2 = B->izq;
+      B->izq = A;
+      A->der = T2;
+
+      A->altura = altura(A);
+      B->altura = altura(B);
+
+      return B;
+    }
+
+
+
     int calculoBalance(nodoAVL* nodo) {
       int alturaDer = nodo->der ? nodo->der->altura : 0;
       int alturaIzq = nodo->izq ? nodo->izq->altura : 0;
@@ -69,8 +95,27 @@ class AVL {
       nodo->altura = 1 + max(altura(nodo->izq), altura(nodo->der));
 
       int balance = calculoBalance(nodo);
-      bool balanceIzq = balance < -1;
-      bool balanceDer = balance > 1;
+      bool desbalanceIzq = balance < -1;
+      bool desbalanceDer = balance > 1;
+
+      if (desbalanceIzq) {
+        // Caso izq - izq
+        if (nodo->izq->id > id) {
+          return rotacionHoraria(nodo);
+        } else { // Caso izq der
+          nodo->izq = rotacionAntihoraria(nodo->izq);
+          return rotacionHoraria(nodo);
+        }
+      }
+      if (desbalanceDer) {
+        // Caso der - der
+        if (nodo->der->id < id) {
+          return rotacionHoraria(nodo);
+        } else { // Caso der - izq
+          nodo->der = rotacionHoraria(nodo->der);
+          return rotacionAntihoraria(nodo);
+        }
+      }
     }
 
   public:
