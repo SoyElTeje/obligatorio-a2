@@ -177,6 +177,10 @@ class AVL {
     }
 
   public:
+    AVL() {
+      raiz = NULL;
+    }
+
     void insertar(int id, string titulo) {
       raiz = insertarAux(id, titulo, raiz);
     }
