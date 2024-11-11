@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <limits>
+#include "tads/AVL/AVL.cpp"
 
 using namespace std;
 
@@ -9,25 +10,30 @@ int main()
 {
     int cantidadElementos;
     cin >> cantidadElementos;
-    TablaHash tabla(cantidadElementos);
-    string entrada = "";
-    while(cin >> entrada) {
+    AVL arbol;
+    string entrada;
+
+    for (int i = 0; i < cantidadElementos; i++) {
+        cin >> entrada;
         if(entrada == "ADD") {
             int id;
             string titulo;
             cin >> id;
             cin >> titulo;
-            tabla.insertar(id, titulo);
+            arbol.insertar(id, titulo);
         }
-        else if (entrada == "FIND") {
+        if(entrada == "FIND") {
             int id;
             cin >> id;
-            cout << tabla.recuperar(id) << endl;
+            arbol.buscar(id);
         }
-        else if (entrada == "TOGGLE") {
+        if(entrada == "TOGGLE") {
             int id;
             cin >> id;
-            tabla.cambioEstado(id);
+            arbol.cambiarEstado(id);
+        }
+        if(entrada == "COUNT") {
+            arbol.cantLibrosHabilitados();
         }
     }
     return 0;
