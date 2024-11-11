@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "xstring": "cpp",
+    "stdexcept": "cpp",
+    "format": "cpp",
+    "iostream": "cpp",
+    "ostream": "cpp"
+  }
+}
