@@ -1,4 +1,3 @@
-#include <cassert>
 #include <string>
 #include <iostream>
 using namespace std;
@@ -54,9 +53,11 @@ class AVL {
       return B;
     }
 
-
-
     int calculoBalance(nodoAVL* nodo) {
+      if (!nodo) {
+        return 0;
+      }
+
       int alturaDer = nodo->der ? nodo->der->altura : 0;
       int alturaIzq = nodo->izq ? nodo->izq->altura : 0;
 
@@ -74,6 +75,7 @@ class AVL {
     nodoAVL* insertarAux(int id, string libroTitulo, nodoAVL* nodo) {
       if (!nodo) {
         nodoAVL* nuevo = new nodoAVL;
+        nuevo->id = id;
         nuevo->titulo = libroTitulo;
         nuevo->estado = true;
         nuevo->der = NULL;
@@ -84,20 +86,18 @@ class AVL {
         return nuevo;
       }
 
-      if (nodo->id == id) {
-        nodo->titulo = libroTitulo;
-        nodo->estado = true;
-        cantidadHab++;
-        cantidadDes--;
-        return nodo;
-      }
-
-      if (nodo->id < id) {
-        nodo->der = insertarAux(id, libroTitulo, nodo->der);
-      }
-
-      if (nodo->id > id) {
+      if (id < nodo->id) {
         nodo->izq = insertarAux(id, libroTitulo, nodo->izq);
+      } else if (id > nodo->id) {
+        nodo->der = insertarAux(id, libroTitulo, nodo->der);
+      } else {
+          if (!nodo->estado) {
+            nodo->estado = true;
+            cantidadHab++;
+            cantidadDes--;
+          }
+          nodo->titulo = libroTitulo;
+          return nodo;
       }
 
       nodo->altura = 1 + max(altura(nodo->izq), altura(nodo->der));
@@ -118,7 +118,7 @@ class AVL {
       if (desbalanceDer) {
         // Caso der - der
         if (nodo->der->id < id) {
-          return rotacionHoraria(nodo);
+          return rotacionAntihoraria(nodo);
         } else { // Caso der - izq
           nodo->der = rotacionHoraria(nodo->der);
           return rotacionAntihoraria(nodo);
@@ -129,47 +129,48 @@ class AVL {
       return nodo;
     }
 
-    bool buscarAux(int id, nodoAVL* nodo) {
+    void buscarAux(int id, nodoAVL* nodo) {
       if (!nodo) {
         cout << "libro_no_encontrado" << endl;
+        return;
       }
 
       if (nodo->id == id) {
-        cout << nodo->titulo << endl;
         if (nodo->estado) {
-          cout << "H" << endl;
+          cout << nodo->titulo << " H" << endl;
         } else {
-          cout << "D" << endl;
+          cout << nodo->titulo << " D" << endl;
         }
-        return true;
+        return;
       }
 
-      if (nodo->id < id) {
-        buscarAux(id, nodo->der);
-      } else {
+      if (id < nodo->id) {
         buscarAux(id, nodo->izq);
+      } else {
+        buscarAux(id, nodo->der);
       }
-
-      return false;
     }
 
     void cambiarAux(int id, nodoAVL* nodo) {
       if (!nodo) {
         cout << "libro_no_encontrado" << endl;
+        return;
       }
 
       if (nodo->id == id) {
         if (nodo->estado) {
           cantidadDes++;
           cantidadHab--;
+          nodo->estado = false;
         } else {
           cantidadDes--;
           cantidadHab++;
+          nodo->estado = true;
         }
-        nodo->estado = !nodo->estado;
+        return;
       }
 
-      if (nodo->id < id) {
+      if (id < nodo->id) {
         cambiarAux(id, nodo->der);
       } else {
         cambiarAux(id, nodo->izq);
@@ -186,7 +187,7 @@ class AVL {
     }
 
 
-    bool buscar(int id) {
+    void buscar(int id) {
       return buscarAux(id, raiz);
     }
 
