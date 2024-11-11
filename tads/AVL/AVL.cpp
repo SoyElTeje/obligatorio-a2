@@ -106,7 +106,7 @@ class AVL {
       bool desbalanceIzq = balance < -1;
       bool desbalanceDer = balance > 1;
 
-      if (desbalanceIzq) {
+      if (desbalanceDer) {
         // Caso izq - izq
         if (nodo->izq->id > id) {
           return rotacionHoraria(nodo);
@@ -115,7 +115,7 @@ class AVL {
           return rotacionHoraria(nodo);
         }
       }
-      if (desbalanceDer) {
+      if (desbalanceIzq) {
         // Caso der - der
         if (nodo->der->id < id) {
           return rotacionAntihoraria(nodo);
@@ -171,9 +171,9 @@ class AVL {
       }
 
       if (id < nodo->id) {
-        cambiarAux(id, nodo->der);
-      } else {
         cambiarAux(id, nodo->izq);
+      } else {
+        cambiarAux(id, nodo->der);
       }
     }
 
