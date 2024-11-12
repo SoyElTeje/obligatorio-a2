@@ -12,8 +12,8 @@ class Heap {
     int largo;
     nodoHeap* vec;
     int ultimaPos;
-    int* posPorId = new int [largo];
-
+    int* posPorId;
+    
     void swap(int a, int b) {
         nodoHeap aux = vec[a];
         vec[a] = vec[b];
@@ -47,7 +47,7 @@ class Heap {
     void flotar(int i) {
         while (i > 1 && (vec[i].precio < vec[i/2].precio || 
             (vec[i].precio == vec[i/2].precio && vec[i].id > vec[i/2].id))) { // precios iguales e ID nuevo mayor que id viejo
-            swap(vec[i].id, vec[i/2].id);
+            swap(i, i/2);
             i = i / 2;
         }
     }
@@ -66,7 +66,7 @@ class Heap {
                 masChico = nodoDer;
             }
             if (masChico != i) {
-                swap(vec[i].id, vec[masChico].id);
+                swap(i, masChico);
                 i = masChico;
             } else {
                 break;
@@ -98,6 +98,7 @@ class Heap {
         largo = k;
         vec = new nodoHeap [largo + 1];
         ultimaPos = 1;
+        posPorId = new int [k];
     }
 
     void agregarElemento(int id, int precio){
