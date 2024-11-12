@@ -12,15 +12,18 @@ class Heap {
     int largo;
     nodoHeap* vec;
     int ultimaPos;
+    int* posPorId = new int [largo];
 
-    void swap(nodoHeap &a, nodoHeap &b) {
-        nodoHeap aux = a;
-        a = b;
-        b = aux;
+    void swap(int a, int b) {
+        nodoHeap aux = vec[a];
+        vec[a] = vec[b];
+        vec[b] = aux;
+        posPorId[vec[a].id] = a;
+        posPorId[vec[b].id] = b;
     }
 
     void agregarElementoAux(int id, int precio) {
-        int posRepetido = estaEnHeap(id);
+        int posRepetido = posPorId[id];
         vec[ultimaPos].id = id;
         vec[ultimaPos].precio = precio;
 
@@ -35,6 +38,7 @@ class Heap {
         } else {
             vec[ultimaPos].id = id;
             vec[ultimaPos].precio = precio;
+            posPorId[id] = ultimaPos;
             flotar(ultimaPos);
             ultimaPos++;
         }
@@ -43,7 +47,7 @@ class Heap {
     void flotar(int i) {
         while (i > 1 && (vec[i].precio < vec[i/2].precio || 
             (vec[i].precio == vec[i/2].precio && vec[i].id > vec[i/2].id))) { // precios iguales e ID nuevo mayor que id viejo
-            swap(vec[i], vec[i/2]);
+            swap(vec[i].id, vec[i/2].id);
             i = i / 2;
         }
     }
@@ -62,7 +66,7 @@ class Heap {
                 masChico = nodoDer;
             }
             if (masChico != i) {
-                swap(vec[i], vec[masChico]);
+                swap(vec[i].id, vec[masChico].id);
                 i = masChico;
             } else {
                 break;
@@ -80,7 +84,9 @@ class Heap {
     void pop(int k) {
         while (k > 0 && ultimaPos > 1) {
             cout << vec[1].id << endl;
+            posPorId[vec[1].id] = 0;
             vec[1] = vec[ultimaPos - 1];
+            posPorId[vec[1].id] = 1;
             ultimaPos--;
             hundir(1);
             k--;
