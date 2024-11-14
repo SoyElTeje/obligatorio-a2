@@ -9,40 +9,9 @@ class GrafoLista {
 		bool dirigido;
 		bool ponderado;
 
-        int* dijkstra(int origen) {
-            int* visitados = new int[cantidadV + 1];
-            for (int i = 1; i <= cantidadV; i++) {
-                visitados[i] = INT_MAX;
-            }
-            visitados[origen] = 0;
-            int * costos = new int[cantidadV + 1];
-            for (int i = 1; i <= cantidadV; i++) {
-                costos[i] = INT_MAX;
-            }
-            costos[origen] = 0;
-            int* vengo = new int[cantidadV + 1];
-            for (int i = 1; i <= cantidadV; i++) {
-                vengo[i] = -1;
-            }
-            ColaPrioridadExtendida* cola = new ColaPrioridadExtendida(cantidadV);
-            cola->insertar(origen, origen, 0);
-            while (!cola->estaVacia()) {
-                Arista* actual = cola->desencolar();
-                if (costos[actual->destino] > costos[actual->origen] + actual->peso) {
-                    costos[actual->destino] = costos[actual->origen] + actual->peso;
-                    vengo[actual->destino] = actual->origen;
-                    Arista* ady = adyacentes(actual->destino);
-                    while (ady->sig != NULL) {
-                        cola->insertar(actual->destino, ady->destino, ady->peso + costos[actual->destino]);
-                        ady = ady->sig;
-                    }
-                }
-            }
-            return vengo;
-        }
-
+        
 	public:
-		GrafoLista(int cantV, bool esDirigido, bool esPonderado) {
+		GrafoLista(int cantV, bool esDirigido, bool esPonderado = true) {
 			vertices = new Arista*[cantV + 1]();
 			cantidadV = cantV;
 			dirigido = esDirigido;
@@ -54,13 +23,18 @@ class GrafoLista {
 		}
 
 		void agregarArista(int origen, int destino, int peso = 1) {
-			Arista * nuevaArista = new Arista();
+			cout << "Es dirigido: " << (dirigido ? "si" : "no") << endl;
+
+			Arista *nuevaArista = new Arista();
+			nuevaArista->origen = origen;
 			nuevaArista->destino = destino;
 			nuevaArista->peso = peso;
-			nuevaArista->sig = vertices[origen];
+			nuevaArista->sig = vertices[origen]; // Conectar con la lista de adyacencia actual
 			vertices[origen] = nuevaArista;
+
 			if (!dirigido) {
-				Arista * inversa = new Arista();
+				Arista *inversa = new Arista();
+				inversa->origen = destino;
 				inversa->destino = origen;
 				inversa->peso = peso;
 				inversa->sig = vertices[destino];
@@ -72,20 +46,21 @@ class GrafoLista {
 			cout << endl << "Lista de adyacencia:" << endl;
 			for (int i = 1; i <= cantidadV; i++) {
 				cout << i << ": ";
-				Arista * actual = adyacentes(i);
-				while (actual->sig != NULL) {
-					cout << actual->destino << " ";
+				Arista* actual = adyacentes(i);
+				while (actual != NULL) {
+					cout << actual->destino;
 					if (ponderado) {
-						cout << "(" << actual->peso << ") ";
+						cout << " (" << actual->peso << ")";
 					}
-					if(actual->sig->sig) {
-						cout << "-> ";
+					if (actual->sig != NULL) {
+						cout << " -> ";
 					}
 					actual = actual->sig;
 				}
 				cout << endl;
 			}
 		}
+
 
 		Arista* adyacentes(int vertice) {
 			return vertices[vertice];
@@ -94,6 +69,49 @@ class GrafoLista {
 		int cantidadVertices() {
 			return cantidadV;
 		}
+
+		int** dijkstra(int origen) {
+            bool* visitados = new bool[cantidadV + 1];
+            for (int i = 1; i <= cantidadV; i++) {
+                visitados[i] = false;
+            }
+            visitados[origen] = false;
+            int * costos = new int[cantidadV + 1];
+            for (int i = 1; i <= cantidadV; i++) {
+                costos[i] = INT_MAX;
+            }
+            costos[origen] = 0;
+            int* vengo = new int[cantidadV + 1];
+            for (int i = 1; i <= cantidadV; i++) {
+                vengo[i] = -1;
+            }
+            ColaPrioridadExtendida* cola = new ColaPrioridadExtendida(cantidadV + 1);
+            cola->insertar(origen, origen, 0);
+            while (!cola->estaVacia()) {
+                Arista* actual = cola->desencolar();
+                visitados[actual->destino] = true;
+				Arista* ady = adyacentes(actual->destino);
+				Arista* imprimirAdy = adyacentes(actual->destino);
+				while (imprimirAdy->sig != NULL) {
+					cout << imprimirAdy->destino << " ";
+					imprimirAdy = imprimirAdy->sig;
+				}
+				while (ady != NULL) {
+					if(!visitados[ady->destino] && costos[actual->destino] + ady->peso < costos[ady->destino]) {
+						costos[ady->destino] = costos[actual->destino] + ady->peso;
+						vengo[ady->destino] = actual->destino;
+						cola->insertar(actual->destino, ady->destino, costos[ady->destino]);
+					}
+					ady = ady->sig;
+				}
+            }
+            int ** ret = new int*[2];
+			ret[0] = costos;
+			ret[1] = vengo;
+			delete[] visitados;
+			return ret;
+        }
+
 
 
 };
