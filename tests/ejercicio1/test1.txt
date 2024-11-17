@@ -1,0 +1,13 @@
+12
+ADD 2 test
+ADD 6 test2
+ADD 8 test5
+ADD 10 test10
+ADD 5 test
+ADD 100 test2
+ADD 101 test5
+ADD 102 test10
+ADD 103 test10
+ADD 104 tasda
+TOGGLE 104
+ADD 900 asdas
