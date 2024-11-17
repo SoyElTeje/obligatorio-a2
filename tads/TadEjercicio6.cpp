@@ -341,7 +341,7 @@ class GrafoLista {
 				cout << " -> Ir a Punto de extraccion" << endl;
 
 			} else {
-				cout << "BE11, la mejor ruta buscar equipo, Desactivar la Entidad y punto de extraccion con un costo de " << costoTotal2 << endl;
+				cout << "BE11, la mejor ruta es buscar equipo, Desactivar la Entidad y punto de extraccion con un costo de " << costoTotal2 << endl;
 				cout << "La otra opcion tiene un costo de " << costoTotal << endl;
 
 				// Imprimir los pasos y costos
