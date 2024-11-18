@@ -16,7 +16,7 @@ class Grafo {
     };
 
     int cantElem;
-    nodoMision **matrizAdy;
+    nodoMision** matrizAdy;
     
     public:
     Grafo (int cantidadElementos) {
