@@ -10,6 +10,7 @@ Para las ciudades se usa como peso las distancias
 class Grafo {
     private:
     struct nodoMision {
+        string nombreMision;
         int ciudadMision;
         int peso;
     };
@@ -26,6 +27,7 @@ class Grafo {
             for (int j = 0; j < cantidadElementos; j++) {
                 matrizAdy[i][j].ciudadMision = 0;
                 matrizAdy[i][j].peso = 0;
+                matrizAdy[i][j].nombreMision = "";
             }
         }
     }
@@ -37,11 +39,13 @@ class Grafo {
         delete[] matrizAdy;
     }
 
-    void agregarNodo (int salida, int llegada, int idCiudad, int peso) {
+    void agregarNodo (int salida, int llegada, int idCiudad, int peso, string nombreMision) {
         matrizAdy[salida][llegada].peso = peso;
         matrizAdy[llegada][salida].peso = peso;
         matrizAdy[salida][llegada].ciudadMision = idCiudad;
         matrizAdy[llegada][salida].ciudadMision = idCiudad;
+        matrizAdy[salida][llegada].nombreMision = nombreMision;
+        matrizAdy[llegada][salida].nombreMision = nombreMision;
         
     }
 
