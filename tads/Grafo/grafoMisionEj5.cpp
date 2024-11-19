@@ -39,7 +39,7 @@ class Grafo {
         delete[] matrizAdy;
     }
 
-    void agregarNodo (int salida, int llegada, int idCiudad, int peso, string nombreMision) {
+    void agregarMision (int salida, int llegada, int idCiudad, int peso, string nombreMision) {
         matrizAdy[salida][llegada].peso = peso;
         matrizAdy[llegada][salida].peso = peso;
         matrizAdy[salida][llegada].ciudadMision = idCiudad;
