@@ -9,44 +9,60 @@ Para las ciudades se usa como peso las distancias
 */
 class Grafo {
     private:
-    int cantElem;
-    int** matrizAdy;
-    string* nombreCiudad;
+    struct ciudadAdyacente {
+        int pesoLlegada;
+        int idMision;
+        ciudadAdyacente* sig;
+    };
+
+    struct nodoCiudad {
+        string nombreCiudad;
+        ciudadAdyacente* adyacentes;
+    };
     
+    int cantCiudades;
+    nodoCiudad* vecCiudades;
+
+    void insertarAdy (nodoCiudad* ciudadSalida, int idLlegada, int peso) {
+        ciudadAdyacente* nuevoAdyacente = new ciudadAdyacente;
+        nuevoAdyacente->idMision = idLlegada;
+        nuevoAdyacente->pesoLlegada = peso;
+        nuevoAdyacente->sig = NULL;
+        
+
+        if (ciudadSalida->adyacentes == NULL) {
+            ciudadSalida->adyacentes = nuevoAdyacente;
+        } else {
+            ciudadAdyacente* aux = ciudadSalida->adyacentes;
+            nuevoAdyacente->sig = aux;
+            ciudadSalida->adyacentes = nuevoAdyacente;
+        }
+    }
+    
+
     public:
     Grafo (int cantidadElementos) {
-        cantElem = cantidadElementos;
-        nombreCiudad = new string [cantElem];
-        for (int i = 0; i < cantElem; i++) {
-            nombreCiudad[i] = "";
-        }
-
-        matrizAdy = new int * [cantElem];
-        for (int i = 0; i < cantidadElementos; i++) {
-            matrizAdy[i] = new int[cantidadElementos];
-            for (int j = 0; j < cantidadElementos; j++) {
-                matrizAdy[i][j] = 0;
-            }
+        cantCiudades = cantidadElementos;
+        vecCiudades = new nodoCiudad [cantCiudades];
+        for (int i = 0; i < cantCiudades; i++) {
+            vecCiudades[i].nombreCiudad = "";
+            vecCiudades[i].adyacentes = NULL;
         }
     }
 
     ~Grafo() {
-        for (int i = 0; i < cantElem; i++) {
-            delete[] matrizAdy[i];
-        }
-        delete[] matrizAdy;
-        delete[] nombreCiudad; 
+        // TODO
     }
 
-    void agregarConexionCiudad (int salida, int llegada, int peso, string nombreCiu) {
-        matrizAdy[salida][llegada] = peso;
-        matrizAdy[llegada][salida] = peso;
-        if (nombreCiudad[salida] == "") {
-            nombreCiudad[salida] = nombreCiu;
-        }
+    void insertarCiudad (string nombreCiu, int idCiudad) {
+        vecCiudades[idCiudad].nombreCiudad = nombreCiu;
     }
 
-    int pesoCamino (int salida, int llegada) {
-        return matrizAdy[salida][llegada];
+    void agregarConexionCiudad (int idSalida, int idLlegada, int peso) {
+        insertarAdy(&vecCiudades[idSalida], idLlegada, peso);
+    }
+
+    ciudadAdyacente* ciudadesAdyacentes (int idCiudad) {
+        return vecCiudades[idCiudad].adyacentes;
     }
 };
