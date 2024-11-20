@@ -9,47 +9,56 @@ Para las ciudades se usa como peso las distancias
 */
 class Grafo {
     private:
+    struct misionDependiente {
+        int idMision;
+        misionDependiente* sig;
+    };
     struct nodoMision {
         string nombreMision;
-        int ciudadMision;
-        int peso;
+        int idCiudad;
+        misionDependiente* misionesDependientes;
     };
 
-    int cantElem;
-    nodoMision** matrizAdy;
+    int cantMisiones;
+    nodoMision* vecMisiones;
     
     public:
     Grafo (int cantidadElementos) {
-        cantElem = cantidadElementos;
-        matrizAdy = new nodoMision * [cantElem];
-        for (int i = 0; i < cantidadElementos; i++) {
-            matrizAdy[i] = new nodoMision[cantidadElementos];
-            for (int j = 0; j < cantidadElementos; j++) {
-                matrizAdy[i][j].ciudadMision = 0;
-                matrizAdy[i][j].peso = 0;
-                matrizAdy[i][j].nombreMision = "";
-            }
+        cantMisiones = cantidadElementos;
+        vecMisiones = new nodoMision[cantMisiones];
+        for (int i = 0; i < cantMisiones; i++) {
+            vecMisiones[i].idCiudad = 0;
+            vecMisiones[i].misionesDependientes = NULL;
+            vecMisiones[i].nombreMision = "";
         }
     }
 
     ~Grafo() {
-        for (int i = 0; i < cantElem; i++) {
-            delete[] matrizAdy[i];
+        // TODO
+    }
+
+    void agregarMision (int idMision, string nombreMision, int idCiudad, int* dependientes) {
+        vecMisiones[idMision].nombreMision = nombreMision;
+        vecMisiones[idMision].idCiudad = idCiudad;
+
+        int i = 0;
+        while (dependientes[i] != 0) {
+            agregarDependientes(idMision, dependientes[i]);
+            i++;
         }
-        delete[] matrizAdy;
     }
 
-    void agregarMision (int salida, int llegada, int idCiudad, int peso, string nombreMision) {
-        matrizAdy[salida][llegada].peso = peso;
-        matrizAdy[llegada][salida].peso = peso;
-        matrizAdy[salida][llegada].ciudadMision = idCiudad;
-        matrizAdy[llegada][salida].ciudadMision = idCiudad;
-        matrizAdy[salida][llegada].nombreMision = nombreMision;
-        matrizAdy[llegada][salida].nombreMision = nombreMision;
-        
-    }
+    void agregarDependientes (int idMision, int idDependiente) {
+        misionDependiente* nueva = new misionDependiente;
+        nueva->idMision = idDependiente;
+        nueva->sig = NULL;
 
-    int pesoCamino (int salida, int llegada) {
-        return matrizAdy[salida][llegada].peso;
+        if (vecMisiones[idMision].misionesDependientes == NULL) {
+            vecMisiones[idMision].misionesDependientes = nueva;
+        } else {
+            misionDependiente* aux = vecMisiones[idMision].misionesDependientes;
+            nueva->sig = aux;
+            vecMisiones[idMision].misionesDependientes = nueva;
+        }
     }
 };
