@@ -1,9 +1,12 @@
 {
   "files.associations": {
+    "*.ejs": "html",
+    "*.md": "markdown",
     "xstring": "cpp",
     "stdexcept": "cpp",
     "format": "cpp",
     "iostream": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "limits": "cpp"
   }
 }

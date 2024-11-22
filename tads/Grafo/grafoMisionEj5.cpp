@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include "../OT/nodoListaEj5.cpp"
 using namespace std;
 
 /* 
@@ -9,14 +10,11 @@ Para las ciudades se usa como peso las distancias
 */
 class Grafo {
     private:
-    struct misionDependiente {
-        int idMision;
-        misionDependiente* sig;
-    };
     struct nodoMision {
         string nombreMision;
+        int gradoEntrada;
         int idCiudad;
-        misionDependiente* misionesDependientes;
+        Lista* misionesDependientes;
     };
 
     int cantMisiones;
@@ -28,7 +26,7 @@ class Grafo {
         vecMisiones = new nodoMision[cantMisiones];
         for (int i = 0; i < cantMisiones; i++) {
             vecMisiones[i].idCiudad = 0;
-            vecMisiones[i].misionesDependientes = NULL;
+            vecMisiones[i].misionesDependientes = Lista();
             vecMisiones[i].nombreMision = "";
         }
     }
@@ -49,16 +47,26 @@ class Grafo {
     }
 
     void agregarDependientes (int idMision, int idDependiente) {
-        misionDependiente* nueva = new misionDependiente;
-        nueva->idMision = idDependiente;
-        nueva->sig = NULL;
+        vecMisiones[idMision].misionesDependientes->insertar(idDependiente);
+        vecMisiones[idDependiente].gradoEntrada++;
+    }
 
-        if (vecMisiones[idMision].misionesDependientes == NULL) {
-            vecMisiones[idMision].misionesDependientes = nueva;
-        } else {
-            misionDependiente* aux = vecMisiones[idMision].misionesDependientes;
-            nueva->sig = aux;
-            vecMisiones[idMision].misionesDependientes = nueva;
+    Lista* noEntrantes() {
+        Lista* grados = new Lista;
+
+        for (int i = 0; i < cantMisiones; i++) {
+            if (vecMisiones[i].gradoEntrada == 0) {
+                grados->insertar(i);
+            }
         }
+        return grados;
+    }
+
+    Lista* nodosDependientes(int idMision) {
+        return vecMisiones[idMision].misionesDependientes;
+    }
+
+    void decrementarGrado(int idMision) {
+        vecMisiones[idMision].gradoEntrada--;
     }
 };
