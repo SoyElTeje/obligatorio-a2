@@ -34,9 +34,6 @@ int main()
             cin >> id;
             cp->hacerParaLlevar(id);
         }
-        else if (entrada == "P") {
-            cp->imprimir();
-        }
     }
     cp->imprimirLosQueFaltan();
     return 0;
