@@ -1,7 +1,8 @@
 using namespace std;
 #include <string>
+#include <iostream>
 
-bool noRepiteFlorCostados(int **jardin, int tamanioJardin, int fila, int columna, int *restricciones, int flor)
+bool noRepiteFlorCostados(int **jardin, int tamanioJardin, int fila, int columna, int flor)
 {
     if (columna == 0 && fila == 0)
     {
@@ -43,33 +44,68 @@ bool noRepiteFlorCostados(int **jardin, int tamanioJardin, int fila, int columna
 
 bool puedoPonerFlor(int **jardin, int tamanioJardin, int fila, int columna, int *restricciones, int flor)
 {
-    if (restricciones[flor] == -1)
+    if (restricciones[flor] != fila && restricciones[flor] != -1)
     {
-        return noRepiteFlorCostados(jardin, tamanioJardin, fila, columna, restricciones, flor);
-    }
-    if (restricciones[flor] != fila)
         return false;
+    }
+    return noRepiteFlorCostados(jardin, tamanioJardin, fila, columna, flor);
 }
-void cantidadFlores(int colActual, int **jardin, int tamanioJardin, int *restricciones, int &mejorSolucion)
+
+bool esPosicionValida(int fila, int columna, int tamanioJardin)
+{
+    return fila >= 0 && fila < tamanioJardin && columna >= 0 && columna < tamanioJardin;
+}
+
+bool esSolucion(int **jardin, int tamanioJardin, int filaActual, int columnaActual)
+{
+    return filaActual == tamanioJardin;
+}
+
+void procesarSolucion(int totalFlores, int &mejorSolucion)
+{
+    if (totalFlores > mejorSolucion)
+    {
+        mejorSolucion = totalFlores;
+    }
+}
+
+void cantidadFlores(int colActual, int filaActual, int **jardin, int tamanioJardin, int *restricciones, int totalFlores, int colocadasActual, int &mejorSolucion)
 {
     if (colActual == tamanioJardin)
     {
-        int solucion = 0;
-        for (int i = 0; i < tamanioJardin; i++)
-        {
-            solucion += jardin[i][restricciones[i]];
-        }
-        if (solucion < mejorSolucion)
-        {
-            mejorSolucion = solucion;
-        }
+        colActual = 0;
+        filaActual++;
     }
-    else
+    if (esSolucion(jardin, tamanioJardin, filaActual, colActual))
     {
-        for (int i = 0; i < tamanioJardin; i++)
+        procesarSolucion(colocadasActual, mejorSolucion);
+        return;
+    }
+
+    for (int flor = 1; flor <= totalFlores; flor++)
+    {
+        if (puedoPonerFlor(jardin, tamanioJardin, filaActual, colActual, restricciones, flor))
         {
-            restricciones[colActual] = i;
-            cantidadFlores(colActual + 1, jardin, tamanioJardin, restricciones, mejorSolucion);
+            jardin[filaActual][colActual] = flor;
+            colocadasActual++;
+            cantidadFlores(colActual + 1, filaActual, jardin, tamanioJardin, restricciones, totalFlores, colocadasActual, mejorSolucion);
+            colocadasActual--;
+            jardin[filaActual][colActual] = 0;
         }
     }
+    cantidadFlores(colActual + 1, filaActual, jardin, tamanioJardin, restricciones, totalFlores, colocadasActual, mejorSolucion);
+}
+
+int **inicializarJardin(int tamanioJardin)
+{
+    int **jardin = new int *[tamanioJardin];
+    for (int i = 0; i < tamanioJardin; i++)
+    {
+        jardin[i] = new int[tamanioJardin];
+        for (int j = 0; j < tamanioJardin; j++)
+        {
+            jardin[i][j] = 0;
+        }
+    }
+    return jardin;
 }
