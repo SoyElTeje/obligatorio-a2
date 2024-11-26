@@ -1,6 +1,5 @@
 #include <string>
 #include <iostream>
-#include "../Grafo/grafoMisionEj5.cpp"
 
 struct nodoLista {
     int idMision;
@@ -14,6 +13,14 @@ class Lista {
     public:
     Lista () {
         cabeza = NULL;
+    }
+
+    ~Lista() {
+        while (cabeza) {
+            nodoLista* aux = cabeza;
+            cabeza = cabeza->sig;
+            delete aux;
+        }
     }
 
     void insertar(int idMision) {
@@ -38,15 +45,15 @@ class Lista {
         return id;
     }
 
+    bool estaVacia() {
+        return cabeza == NULL;
+    }
+
     int getIdMision() {
         return cabeza->idMision;
     }
 
-    void decrementarDependencias(int idActual, Grafo* grafo) {
-        nodoLista* aux = grafo->nodosDependientes(idActual);
-        while (aux) {
-            grafo->decrementarGrado(aux->idMision);
-        }
+    nodoLista* getCabeza() {
+        return cabeza;
     }
-    
 };

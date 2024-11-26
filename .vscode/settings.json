@@ -7,6 +7,10 @@
     "format": "cpp",
     "iostream": "cpp",
     "ostream": "cpp",
-    "limits": "cpp"
+    "limits": "cpp",
+    "string": "cpp",
+    "new": "cpp",
+    "climits": "cpp",
+    "cassert": "cpp"
   }
 }
