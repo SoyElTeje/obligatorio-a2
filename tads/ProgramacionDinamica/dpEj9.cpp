@@ -24,6 +24,10 @@ class DP {
     int presupuesto;
     int maxExtranjeros;
 
+    int maximo (int a, int b) {
+        return (a > b) ? a : b;
+    }
+
     public:
     DP(int cantJugadores) {
         cantidadJugadores = cantJugadores;
@@ -97,7 +101,7 @@ class DP {
                         
                         // Si se puede pagar a este jugador y todavia quedan cupos extranjeros se agrega el jugador
                         if (n > 0 && pActual >= salario && eActual >= esExtranjero) {
-                            dp[i][pActual][eActual][n] = max(dp[i][pActual][eActual][n],
+                            dp[i][pActual][eActual][n] = maximo(dp[i][pActual][eActual][n],
                                 dp[i - 1][pActual - salario][eActual - esExtranjero][n - 1] + valoracion);
                         } else {
                             
