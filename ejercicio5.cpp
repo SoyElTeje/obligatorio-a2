@@ -2,10 +2,7 @@
 #include <string>
 #include <iostream>
 #include <climits>
-#include "./tads/OT/grafoMisionEj5.cpp"
-#include "./tads/OT/grafoCiudadEj5.cpp"
-#include "./tads/OT/ordenTopologicoEj5.cpp"
-#include "./tads/OT/nodoListaEj5.cpp"
+#include "./tads/OT/laGodClase.cpp"
 
 using namespace std;
 
@@ -21,11 +18,11 @@ int main()
     int idCiudad;
     int dependientes;
 
-    for (int i = 0; i < cantidadMisiones; i++) {
+    for (int i = 1; i <= cantidadMisiones; i++) {
         cin >> idMision;
         cin >> nombreMision;
         cin >> idCiudad;
-        grafoMisiones->agregarMision(idMision, nombreMision, idCiudad, NULL);
+        grafoMisiones->agregarMision(idMision, nombreMision, idCiudad);
 
         cin >> dependientes;
         while (dependientes != 0) {
@@ -43,12 +40,12 @@ int main()
     GrafoCiudad* grafoCiudades = new GrafoCiudad(cantidadCiudades);
     int idCiudadparaCiudades;
     string nombreCiudad;
-    for (int i = 0; i < idCiudadparaCiudades; i++) {
+    for (int i = 1; i <= cantidadCiudades; i++) {
         cin >> idCiudad;
         cin >> nombreCiudad;
+        grafoCiudades->insertarCiudad(nombreCiudad, idCiudad);
     }
-
-
+    
     // Conecciones entre ciudades
     int cantidadConecciones;
     cin >> cantidadConecciones;
@@ -56,7 +53,7 @@ int main()
     int idCiudadDestino;
     int tiempoDesplazamiento;
 
-    for (int i = 0; i < cantidadConecciones; i++) {
+    for (int i = 1; i <= cantidadConecciones; i++) {
         cin >> idCiudadOrigen;
         cin >> idCiudadDestino;
         cin >> tiempoDesplazamiento;
@@ -77,14 +74,35 @@ int main()
         int idMision = actual->idMision;
         int idCiudadMision = grafoMisiones->getCiudad(idMision);
 
+        // Obtener detalles de la misión
         string nombreMision = grafoMisiones->getNombreMision(idMision);
-        cout << "Mision: " << nombreMision << " - Ciudad: " << grafoCiudades->obtenerNombreCiudad(idCiudadMision) << endl;
+        string nombreCiudadMision = grafoCiudades->obtenerNombreCiudad(idCiudadMision);
+
+        int* costos = grafoCiudades->dijkstra(posicionIMF);
+        int tiempoViaje = costos[idCiudadMision];
+
+        // Imprimir detalles de la misión
+        cout << grafoCiudades->obtenerNombreCiudad(posicionIMF) << " -> "
+             << nombreCiudadMision << " -> Mision: " << nombreMision
+             << " - " << nombreCiudadMision
+             << " - Tiempo de viaje: " << tiempoViaje << endl;
+
+        // Actualizar tiempo total y posición actual
+        tiempoTotal += tiempoViaje;
+        posicionIMF = idCiudadMision;
+
+        // Liberar memoria de los costos de Dijkstra
+        delete[] costos;
 
         actual = actual->sig;
     }
 
     cout << "Misiones ejecutadas con éxito." << endl;
     cout << "Tiempo total de viaje: " << tiempoTotal << endl;
+    
+    delete grafoMisiones;
+    delete grafoCiudades;
+    delete ot;
 
     return 0;
 }
