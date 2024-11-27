@@ -1,0 +1,23 @@
+Ciudad inicial: Salto
+Salto -> Colonia -> Mision: Desactivar_la_Entidad - Colonia - Tiempo de viaje: 173
+Colonia -> Canelones -> Mision: Proteger_emisarios - Canelones - Tiempo de viaje: 2147483647
+Canelones -> Lisboa -> Mision: Infiltrarse_grupo - Lisboa - Tiempo de viaje: 101
+Lisboa -> Paysandu -> Mision: Eliminar_trazabilidad_de_mision - Paysandu - Tiempo de viaje: 2147483647
+Paysandu -> Santiago_de_Chile -> Mision: Proteger_testigo_vip - Santiago_de_Chile - Tiempo de viaje: 133
+Santiago_de_Chile -> Santiago_de_Chile -> Mision: Desactivar_servidor - Santiago_de_Chile - Tiempo de viaje: 0
+Santiago_de_Chile -> Atenas -> Mision: Rastrear_satelite_pirata - Atenas - Tiempo de viaje: 2147483647
+Atenas -> Caracas -> Mision: Sabotear_instalacion - Caracas - Tiempo de viaje: 39
+Caracas -> Durazno -> Mision: Interceptar_mensaje_enemigo - Durazno - Tiempo de viaje: 2147483647
+Durazno -> Ciudad_del_Cabo -> Mision: Neutralizar_amenaza - Ciudad_del_Cabo - Tiempo de viaje: 115
+Ciudad_del_Cabo -> Barcelona -> Mision: Detener_fuga_de_informacion - Barcelona - Tiempo de viaje: 2147483647
+Barcelona -> Rivera -> Mision: Identificar_agente_hostil - Rivera - Tiempo de viaje: 2147483647
+Rivera -> Santiago_de_Chile -> Mision: Asegurar_artefacto - Santiago_de_Chile - Tiempo de viaje: 143
+Santiago_de_Chile -> Canelones -> Mision: Proteger_emisarios - Canelones - Tiempo de viaje: 2147483647
+Canelones -> Salto -> Mision: Establecer_contacto_confidencial - Salto - Tiempo de viaje: 2147483647
+Salto -> Beijing -> Mision: Obtener_coordenadas_clave - Beijing - Tiempo de viaje: 41
+Beijing -> Johannesburgo -> Mision: Identificar_objetivo_secundario - Johannesburgo - Tiempo de viaje: 2147483647
+Johannesburgo -> Madrid -> Mision: Eliminar_trazabilidad_de_mision - Madrid - Tiempo de viaje: 2147483647
+Madrid -> Londres -> Mision: Infiltrarse_en_el_consejo - Londres - Tiempo de viaje: 2147483647
+Londres -> Barcelona -> Mision: Anular_defensas_enemigas - Barcelona - Tiempo de viaje: 98
+Misiones ejecutadas con éxito.
+Tiempo total de viaje: -2147482816
