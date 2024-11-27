@@ -71,6 +71,11 @@ void procesarSolucion(int totalFlores, int &mejorSolucion)
 
 void cantidadFlores(int colActual, int filaActual, int **jardin, int tamanioJardin, int *restricciones, int totalFlores, int colocadasActual, int &mejorSolucion)
 {
+    int floresRestantesAColocar = tamanioJardin * tamanioJardin - (filaActual > 0 ? filaActual - 1 : 0) * (tamanioJardin)-colActual;
+    if (colocadasActual + floresRestantesAColocar <= mejorSolucion)
+    {
+        return;
+    }
     if (colActual == tamanioJardin)
     {
         colActual = 0;
