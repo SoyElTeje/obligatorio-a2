@@ -61,7 +61,15 @@ class DP {
     }
 
     int calcularValoracion(int presupuesto, int maxExtranjeros) {
-        int**** dp = new int*** [cantidadJugadores + 1]; // Mochila de 4 dimensiones
+        /* El problema tiene 4 restricciones: 
+            cantidad de jugadores, 
+            presupuesto, 
+            cantidad de extranjeros,
+            que en total jueguen 11 jugadores
+        */
+        
+        int**** dp = new int*** [cantidadJugadores + 1]; 
+        // Inicializamos mochila de 4 dimensiones
         for (int i = 0; i <= cantidadJugadores; i++) {
             dp[i] = new int** [presupuesto + 1];
             for (int j = 0; j <= presupuesto; j++) {
@@ -75,43 +83,32 @@ class DP {
             }
         }
 
-        // Caso base: 0 jugadores seleccionados tienen valor 0
-        for (int pActual = 0; pActual <= presupuesto; pActual++) {
-            for (int eActual = 0; eActual <= maxExtranjeros; eActual++) {
-                dp[0][pActual][eActual][0] = 0;
-            }
-        }
-
-        // Llenamos la tabla DP
         for (int i = 1; i <= cantidadJugadores; i++) {
-            int valor = jugadores[i - 1].valoracion;
+            int valoracion = jugadores[i - 1].valoracion;
             int salario = jugadores[i - 1].salario;
             int esExtranjero = (jugadores[i - 1].extranjero == "Si") ? 1 : 0;
 
             for (int pActual = 0; pActual <= presupuesto; pActual++) {
                 for (int eActual = 0; eActual <= maxExtranjeros; eActual++) {
                     for (int n = 0; n <= 11; n++) {
-                        // Caso 1: No seleccionamos al jugador actual
+                        
+                        // Si no cumple las condiciones, copiamos el valor de la iteracion anterior
                         dp[i][pActual][eActual][n] = dp[i - 1][pActual][eActual][n];
-
-                        // Caso 2: Seleccionamos al jugador actual (si cumple restricciones)
+                        
+                        // Si se puede pagar a este jugador y todavia quedan cupos extranjeros se agrega el jugador
                         if (n > 0 && pActual >= salario && eActual >= esExtranjero) {
                             dp[i][pActual][eActual][n] = max(dp[i][pActual][eActual][n],
-                                dp[i - 1][pActual - salario][eActual - esExtranjero][n - 1] + valor);
+                                dp[i - 1][pActual - salario][eActual - esExtranjero][n - 1] + valoracion);
+                        } else {
+                            
                         }
                     }
                 }
             }
         }
 
-        // La respuesta es el mejor valor para 11 jugadores seleccionados
-        int maxValoracion = 0;
-        for (int pActual = 0; pActual <= presupuesto; pActual++) {
-            for (int eActual = 0; eActual <= maxExtranjeros; eActual++) {
-                maxValoracion = max(maxValoracion, dp[cantidadJugadores][pActual][eActual][11]);
-            }
-        }
-        // Retornamos el promedio de valoración
-        return maxValoracion / 11;
+        int maxValoracion = dp[cantidadJugadores][presupuesto][maxExtranjeros][11]; // Basados en todos los jugadores, el presupuesto y la maxima cantidad de extrnjeros, seleccionamos la valoracion para 11 jugadores
+
+        return maxValoracion / 11; // Promedio de valoracion del 11 inicial
     }
 };
