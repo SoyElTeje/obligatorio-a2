@@ -1,5 +1,7 @@
 {
   "files.associations": {
+    "*.ejs": "html",
+    "*.md": "markdown",
     "xstring": "cpp",
     "stdexcept": "cpp",
     "format": "cpp",
@@ -50,6 +52,7 @@
     "xmemory": "cpp",
     "xtr1common": "cpp",
     "xutility": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "__config": "cpp"
   }
 }
