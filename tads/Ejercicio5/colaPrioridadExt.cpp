@@ -101,4 +101,12 @@ class Heap {
             k--;
         }
     }
+
+    void vaciar() {
+        ultimaPos = 1;
+    }
+
+    bool estaVacio() {
+        return ultimaPos == 1;
+    }
 };
