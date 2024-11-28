@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include "definiciones5.cpp"
+#include "colaPrioridadExt.cpp"
 using namespace std;
 
 class GrafoLista
@@ -178,6 +179,8 @@ private:
     int cantV;
     int *gradoEntrada;
     bool *misionesHechas;
+    bool yaBusqueGrado0;
+    ListaEnteros *misionesGrado0;
 
 public:
     GrafoOT(int cantidadElementos)
@@ -186,6 +189,8 @@ public:
         grafoDependencias = new GrafoLista(cantV, true, false);
         gradoEntrada = new int[cantV + 1]();
         misionesHechas = new bool[cantV + 1]();
+        yaBusqueGrado0 = false;
+        misionesGrado0 = NULL;
     }
 
     ~GrafoOT()
@@ -208,6 +213,13 @@ public:
         while (ady != NULL)
         {
             gradoEntrada[ady->destino]--;
+            if (gradoEntrada[ady->destino] == 0)
+            {
+                ListaEnteros *nueva = new ListaEnteros();
+                nueva->num = ady->destino;
+                nueva->sig = misionesGrado0;
+                misionesGrado0 = nueva;
+            }
             ady = ady->sig;
         }
     }
@@ -227,20 +239,28 @@ public:
         return grafoDependencias->adyacentes(vertice);
     }
 
-    ListaEnteros *queMisionPuedoHacer()
+    void buscarGrado0()
     {
-        ListaEnteros *misiones = NULL;
         for (int i = 1; i <= cantV; i++)
         {
-            if (gradoEntrada[i] == 0 && !misionesHechas[i])
+            if (gradoEntrada[i] == 0)
             {
                 ListaEnteros *nueva = new ListaEnteros();
                 nueva->num = i;
-                nueva->sig = misiones;
-                misiones = nueva;
+                nueva->sig = misionesGrado0;
+                misionesGrado0 = nueva;
             }
         }
+    }
 
+    ListaEnteros *queMisionPuedoHacer()
+    {
+        if (!yaBusqueGrado0)
+        {
+            buscarGrado0();
+            yaBusqueGrado0 = true;
+        }
+        ListaEnteros *misiones = misionesGrado0;
         return misiones;
     }
 };
@@ -257,7 +277,7 @@ private:
     int cantidadCiudades;
 
 public:
-    //ELIMINAR?
+    // ELIMINAR?
     void agregarRuta(int origen, int destino, int peso)
     {
         grafoMisiones->agregarArista(origen, destino, peso);
@@ -306,7 +326,7 @@ public:
     {
         misiones = nombres;
     }
-    //ELIMINAR?
+    // ELIMINAR?
     string obtenerCiudadPorId(int idCiudad)
     {
         return ciudades[idCiudad];

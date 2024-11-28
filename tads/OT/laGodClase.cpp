@@ -80,7 +80,8 @@ class Heap {
     }
 
     void flotar(int i) {
-        while (i > 1 && heap[i].costoLlegada < heap[i/2].costoLlegada || (heap[i].costoLlegada == heap[i/2].costoLlegada && heap[i].idNodo  < heap[i/2].idNodo )) {
+        while (i > 1 && (heap[i].costoLlegada < heap[i/2].costoLlegada || 
+            (heap[i].costoLlegada == heap[i/2].costoLlegada && heap[i].idNodo < heap[i/2].idNodo))) {
             swap(i, i/2);
             i = i / 2;
         }

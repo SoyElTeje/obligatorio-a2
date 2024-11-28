@@ -2,19 +2,22 @@
 #include <iostream>
 using namespace std;
 
-class Heap {
-    private:
-    struct nodoHeap {
+class ColaPrioridadMision
+{
+private:
+    struct nodoHeap
+    {
         int id;
         int costo;
     };
 
     int largo;
-    nodoHeap* vec;
+    nodoHeap *vec;
     int ultimaPos;
-    int* posPorId;
-    
-    void swap(int a, int b) {
+    int *posPorId;
+
+    void swap(int a, int b)
+    {
         nodoHeap aux = vec[a];
         vec[a] = vec[b];
         vec[b] = aux;
@@ -22,20 +25,27 @@ class Heap {
         posPorId[vec[b].id] = b;
     }
 
-    void agregarElementoAux(int id, int costo) {
+    void agregarElementoAux(int id, int costo)
+    {
         int posRepetido = posPorId[id];
         vec[ultimaPos].id = id;
         vec[ultimaPos].costo = costo;
 
-        if (posRepetido != 0) {
-            if (costo < vec[posRepetido].costo) {
+        if (posRepetido != 0)
+        {
+            if (costo < vec[posRepetido].costo)
+            {
                 vec[posRepetido].costo = costo;
                 flotar(posRepetido);
-            } else if (costo == vec[posRepetido].costo && id > vec[posRepetido].id) {
+            }
+            else if (costo == vec[posRepetido].costo && id > vec[posRepetido].id)
+            {
                 vec[posRepetido].id = id;
                 flotar(posRepetido);
             }
-        } else {
+        }
+        else
+        {
             vec[ultimaPos].id = id;
             vec[ultimaPos].costo = costo;
             posPorId[id] = ultimaPos;
@@ -44,54 +54,68 @@ class Heap {
         }
     }
 
-    void flotar(int i) {
-        while (i > 1 && (vec[i].costo < vec[i/2].costo || 
-            (vec[i].costo == vec[i/2].costo && vec[i].id > vec[i/2].id))) { // costos iguales e ID nuevo mayor que id viejo
-            swap(i, i/2);
+    void flotar(int i)
+    {
+        while (i > 1 && (vec[i].costo < vec[i / 2].costo ||
+                         (vec[i].costo == vec[i / 2].costo && vec[i].id > vec[i / 2].id)))
+        { // costos iguales e ID nuevo mayor que id viejo
+            swap(i, i / 2);
             i = i / 2;
         }
     }
 
-    void hundir(int i) {
-        while (i * 2 < ultimaPos) {
+    void hundir(int i)
+    {
+        while (i * 2 < ultimaPos)
+        {
             int nodoIzq = i * 2;
             int nodoDer = (i * 2) + 1;
             int masChico = i;
 
-            if (nodoIzq < ultimaPos && (vec[nodoIzq].costo < vec[masChico].costo || (vec[nodoIzq].costo == vec[masChico].costo && vec[nodoIzq].id > vec[masChico].id))) {
+            if (nodoIzq < ultimaPos && (vec[nodoIzq].costo < vec[masChico].costo || (vec[nodoIzq].costo == vec[masChico].costo && vec[nodoIzq].id > vec[masChico].id)))
+            {
                 masChico = nodoIzq;
             }
-            if (nodoDer < ultimaPos && (vec[nodoDer].costo < vec[masChico].costo || (vec[nodoDer].costo == vec[masChico].costo && vec[nodoDer].id > vec[masChico].id))) {
+            if (nodoDer < ultimaPos && (vec[nodoDer].costo < vec[masChico].costo || (vec[nodoDer].costo == vec[masChico].costo && vec[nodoDer].id > vec[masChico].id)))
+            {
                 masChico = nodoDer;
             }
-            if (masChico != i) {
+            if (masChico != i)
+            {
                 swap(i, masChico);
                 i = masChico;
-            } else {
+            }
+            else
+            {
                 break;
             }
         }
     }
 
-    public:
-    Heap(int k) {
+public:
+    ColaPrioridadMision(int k)
+    {
         largo = k;
-        vec = new nodoHeap [largo + 1];
+        vec = new nodoHeap[largo + 1];
         ultimaPos = 1;
-        posPorId = new int [k];
+        posPorId = new int[k];
     }
-    
-    ~Heap() {
+
+    ~ColaPrioridadMision()
+    {
         delete[] vec;
         delete[] posPorId;
     }
 
-    void agregarElemento(int id, int costo){
-        agregarElementoAux(id, costo);        
+    void agregarElemento(int id, int costo)
+    {
+        agregarElementoAux(id, costo);
     };
 
-    void pop(int k) {
-        while (k > 0 && ultimaPos > 1) {
+    void pop(int k)
+    {
+        while (k > 0 && ultimaPos > 1)
+        {
             cout << vec[1].id << endl;
             posPorId[vec[1].id] = 0;
             vec[1] = vec[ultimaPos - 1];
@@ -102,11 +126,13 @@ class Heap {
         }
     }
 
-    void vaciar() {
+    void vaciar()
+    {
         ultimaPos = 1;
     }
 
-    bool estaVacio() {
+    bool estaVacio()
+    {
         return ultimaPos == 1;
     }
 };
