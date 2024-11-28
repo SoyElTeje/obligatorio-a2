@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 #include <limits>
-#include "tads/Heap/heapEjercicio3.cpp"
+#include "tads/Ejercicio3/heapEjercicio3.cpp"
 
 using namespace std;
 

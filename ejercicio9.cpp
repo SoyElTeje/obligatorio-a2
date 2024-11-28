@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 #include <limits>
-#include "tads/ProgramacionDinamica/dpEj9.cpp"
+#include "tads/Ejercicio9/dpEj9.cpp"
 
 using namespace std;
 
@@ -37,8 +37,7 @@ int main()
         cin >> confianza;
         jugadores->agregarJugador(ritmo, tiro, pase, regate, defensa, fisico, formaFisica, salario, extranjero, confianza);
     }
-
-
+    
     int presupuesto;
     cin >> presupuesto;
     int maxExtranjeros;

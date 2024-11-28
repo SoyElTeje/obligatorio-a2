@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 #include <limits>
-#include "tads/TadEjercicio4.cpp"
+#include "tads/Ejercicio4/TadEjercicio4.cpp"
 
 using namespace std;
 

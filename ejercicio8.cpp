@@ -1,7 +1,7 @@
 #include <cassert>
 #include <string>
 #include <limits>
-#include "tads/TadEjercicio8.cpp"
+#include "tads/Ejercicio8/TadEjercicio8.cpp"
 
 using namespace std;
 

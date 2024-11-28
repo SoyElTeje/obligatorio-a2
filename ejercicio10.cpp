@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tads/TadEjercicio10.cpp"
+#include "tads/Ejercicio10/TadEjercicio10.cpp"
 
 using namespace std;
 

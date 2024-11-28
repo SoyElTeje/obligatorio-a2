@@ -2,13 +2,12 @@
 #include <string>
 #include <iostream>
 #include <limits>
-#include "tads/Greedy/GreedyEj7.cpp"
+#include "tads/Ejercicio7/GreedyEj7.cpp"
 
 using namespace std;
 
 int main()
 {
-
     int cantidadCanciones;
     cin >> cantidadCanciones;
 

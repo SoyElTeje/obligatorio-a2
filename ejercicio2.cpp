@@ -1,7 +1,7 @@
 #include <cassert>
 #include <string>
 #include <iostream>
-#include "tads/HashEjercicio2.cpp"
+#include "tads/Ejercicio2/HashEjercicio2.cpp"
 
 int main()
 {
