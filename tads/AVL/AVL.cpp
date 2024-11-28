@@ -24,9 +24,15 @@ class AVL {
     }
 
     int altura(nodoAVL* nodo) {
-      if (!nodo) return 0;
+      return nodo ? nodo->altura : 0;
+    }
 
-      return 1 + max(altura(nodo->izq), altura(nodo->der));
+    int calculoBalance(nodoAVL* nodo) {
+      if (!nodo) {
+        return 0;
+      }
+
+      return (altura(nodo->izq) - altura(nodo->der));
     }
 
     nodoAVL* rotacionHoraria(nodoAVL* B) {
@@ -35,8 +41,8 @@ class AVL {
       A->der = B;
       B->izq = T2;
 
-      A->altura = altura(A);
-      B->altura = altura(B);
+      B->altura = 1 + max(altura(B->izq), altura(B->der));
+      A->altura = 1 + max(altura(A->izq), altura(A->der));
 
       return A;
     }
@@ -47,29 +53,10 @@ class AVL {
       B->izq = A;
       A->der = T2;
 
-      A->altura = altura(A);
-      B->altura = altura(B);
+      A->altura = 1 + max(altura(A->izq), altura(A->der));
+      B->altura = 1 + max(altura(B->izq), altura(B->der));
 
       return B;
-    }
-
-    int calculoBalance(nodoAVL* nodo) {
-      if (!nodo) {
-        return 0;
-      }
-
-      int alturaDer = nodo->der ? nodo->der->altura : 0;
-      int alturaIzq = nodo->izq ? nodo->izq->altura : 0;
-
-      int diferencia = alturaIzq - alturaDer;
-
-      /*
-      Interpretacion de la diferencia:
-        diferencia igual a 0, -1 o 1: el arbol esta balanceado
-        diferencia < -1: desbalance hacia la derecha
-        diferencia > 1: desbalance hacia la izquierda
-      */
-      return diferencia;
     }
 
     nodoAVL* insertarAux(int id, string libroTitulo, nodoAVL* nodo) {
@@ -103,26 +90,24 @@ class AVL {
       nodo->altura = 1 + max(altura(nodo->izq), altura(nodo->der));
 
       int balance = calculoBalance(nodo);
-      bool desbalanceIzq = balance < -1;
-      bool desbalanceDer = balance > 1;
 
-      if (desbalanceDer) {
-        // Caso izq - izq
-        if (nodo->izq->id > id) {
-          return rotacionHoraria(nodo);
-        } else { // Caso izq der
-          nodo->izq = rotacionAntihoraria(nodo->izq);
-          return rotacionHoraria(nodo);
-        }
+      if (balance > 1 && id < nodo->izq->id) {
+        // Caso Izquierda-Izquierda
+        return rotacionHoraria(nodo);
       }
-      if (desbalanceIzq) {
-        // Caso der - der
-        if (nodo->der->id < id) {
-          return rotacionAntihoraria(nodo);
-        } else { // Caso der - izq
-          nodo->der = rotacionHoraria(nodo->der);
-          return rotacionAntihoraria(nodo);
-        }
+      if (balance > 1 && id > nodo->izq->id) {
+        // Caso Izquierda-Derecha
+        nodo->izq = rotacionAntihoraria(nodo->izq);
+        return rotacionHoraria(nodo);
+      }
+      if (balance < -1 && id > nodo->der->id) {
+        // Caso Derecha-Derecha
+        return rotacionAntihoraria(nodo);
+      }
+      if (balance < -1 && id < nodo->der->id) {
+        // Caso Derecha-Izquierda
+        nodo->der = rotacionHoraria(nodo->der);
+        return rotacionAntihoraria(nodo);
       }
       
       // En caso de no haber rotacion
