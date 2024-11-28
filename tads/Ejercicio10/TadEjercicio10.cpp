@@ -51,11 +51,6 @@ bool puedoPonerFlor(int **jardin, int tamanioJardin, int fila, int columna, int 
     return noRepiteFlorCostados(jardin, tamanioJardin, fila, columna, flor);
 }
 
-bool esPosicionValida(int fila, int columna, int tamanioJardin)
-{
-    return fila >= 0 && fila < tamanioJardin && columna >= 0 && columna < tamanioJardin;
-}
-
 bool esSolucion(int **jardin, int tamanioJardin, int filaActual, int columnaActual)
 {
     return filaActual == tamanioJardin;

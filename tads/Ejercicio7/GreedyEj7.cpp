@@ -53,6 +53,10 @@ class GreedyCanciones {
         canciones = vecCanciones;
     }
 
+    ~GreedyCanciones() {
+        delete[] canciones;
+    }
+
     void calcularResultado() {
         int min = minimoMaximoCancion();
         int max = maximaPosibleEscucha();
@@ -84,8 +88,6 @@ class GreedyCanciones {
         }
 
         cout << tiempoActual << " " << inicio << " " << cantidadCanciones << endl;
-
         cout << tiempoOptimo << endl;
     }
-    
 };

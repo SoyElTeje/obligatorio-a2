@@ -294,7 +294,6 @@ class ColaPrioridad {
         }
 
     public:
-
         ColaPrioridad(int tam){
             largo = tam;
             largoTabla = siguientePrimo(tam * 2);

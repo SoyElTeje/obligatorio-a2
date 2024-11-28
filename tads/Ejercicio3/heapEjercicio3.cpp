@@ -74,13 +74,6 @@ class Heap {
         }
     }
 
-    int estaEnHeap(int id) {
-        for (int i = 1; i < ultimaPos; i++) {
-            if (vec[i].id == id) return i;
-        }
-        return 0;
-    }
-
     void pop(int k) {
         while (k > 0 && ultimaPos > 1) {
             cout << vec[1].id << endl;
@@ -99,6 +92,11 @@ class Heap {
         vec = new nodoHeap [largo + 1];
         ultimaPos = 1;
         posPorId = new int [k];
+    }
+    
+    ~Heap() {
+        delete[] vec;
+        delete[] posPorId;
     }
 
     void agregarElemento(int id, int precio){

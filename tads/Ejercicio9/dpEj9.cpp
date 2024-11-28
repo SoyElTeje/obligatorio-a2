@@ -95,7 +95,6 @@ class DP {
             for (int pActual = 0; pActual <= presupuesto; pActual++) {
                 for (int eActual = 0; eActual <= maxExtranjeros; eActual++) {
                     for (int n = 0; n <= 11; n++) {
-                        
                         // Si no cumple las condiciones, copiamos el valor de la iteracion anterior
                         dp[i][pActual][eActual][n] = dp[i - 1][pActual][eActual][n];
                         
@@ -103,8 +102,6 @@ class DP {
                         if (n > 0 && pActual >= salario && eActual >= esExtranjero) {
                             dp[i][pActual][eActual][n] = maximo(dp[i][pActual][eActual][n],
                                 dp[i - 1][pActual - salario][eActual - esExtranjero][n - 1] + valoracion);
-                        } else {
-                            
                         }
                     }
                 }
@@ -112,7 +109,6 @@ class DP {
         }
 
         int maxValoracion = dp[cantidadJugadores][presupuesto][maxExtranjeros][11]; // Basados en todos los jugadores, el presupuesto y la maxima cantidad de extrnjeros, seleccionamos la valoracion para 11 jugadores
-
         return maxValoracion / 11; // Promedio de valoracion del 11 inicial
     }
 };

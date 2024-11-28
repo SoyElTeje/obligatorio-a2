@@ -129,7 +129,7 @@ class DYC {
             delete[] derecha;
         }
 
-        void mergeSort (Ciudad * ciudades, int inicio, int fin, bool ordenarPorX) {
+        void mergeSort(Ciudad * ciudades, int inicio, int fin, bool ordenarPorX) {
             if (inicio < fin) {
                 int mitad = (inicio + fin) / 2;
                 
@@ -148,34 +148,6 @@ class DYC {
         void ordenarPorY(Ciudad* ciudades, int cantidadCiudades) {
             mergeSort(ciudades, 0, cantidadCiudades - 1, false);
         }
-
-        // void ordenarPorX(Ciudad* ciudades, int cantidadCiudades) {
-        //     for (int i = 0; i < cantidadCiudades - 1; ++i) {
-        //         for (int j = 0; j < cantidadCiudades - i - 1; ++j) {
-        //             if (ciudades[j].x > ciudades[j + 1].x) {
-        //                 Ciudad temp = ciudades[j];
-        //                 ciudades[j] = ciudades[j + 1];
-        //                 ciudades[j + 1] = temp;
-        //             }
-        //         }
-        //     }
-        // }
-
-
-
-
-        // void ordenarPorY(Ciudad* ciudades, int cantidadCiudades) {
-        //     for (int i = 0; i < cantidadCiudades - 1; ++i) {
-        //         for (int j = 0; j < cantidadCiudades - i - 1; ++j) {
-        //             if (ciudades[j].y > ciudades[j + 1].y) {
-        //                 Ciudad temp = ciudades[j];
-        //                 ciudades[j] = ciudades[j + 1];
-        //                 ciudades[j + 1] = temp;
-        //             }
-        //         }
-        //     }
-        // }
-
 
         ParCiudades* mejorPar(Ciudad* ciudades, int cantCiudades) {
             ordenarPorX(ciudades, cantCiudades);
@@ -219,7 +191,6 @@ class DYC {
             }
             return mejorPar;
         }
-
 
         ParCiudades* mejorParDYC(Ciudad* ciudades, int inicio, int fin) {
             if (fin - inicio == 2) {

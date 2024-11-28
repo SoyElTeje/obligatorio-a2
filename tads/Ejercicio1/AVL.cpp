@@ -167,6 +167,20 @@ class AVL {
       raiz = NULL;
     }
 
+    ~AVL() {
+      destruir(raiz);
+    }
+
+    void destruir(nodoAVL* nodo) {
+        if (!nodo) {
+            return;
+        }
+        destruir(nodo->izq);
+        destruir(nodo->der);
+        
+        delete nodo;
+    }
+
     void insertar(int id, string titulo) {
       raiz = insertarAux(id, titulo, raiz);
     }

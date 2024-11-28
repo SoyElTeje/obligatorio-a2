@@ -95,7 +95,7 @@ public:
     {
         return cantidadV;
     }
-
+    // ELIMINAR?
     void agregarCiudad(int vertice, string ciudad)
     {
         ciudades[vertice] = ciudad;
@@ -257,6 +257,7 @@ private:
     int cantidadCiudades;
 
 public:
+    //ELIMINAR?
     void agregarRuta(int origen, int destino, int peso)
     {
         grafoMisiones->agregarArista(origen, destino, peso);
@@ -266,7 +267,7 @@ public:
     {
         grafoDependencias->agregarDependencia(mision, dependeDe);
     }
-
+    // ELIMINAR?
     void agregarCiudad(int vertice, string ciudad)
     {
         ciudades[vertice] = ciudad;
@@ -305,7 +306,7 @@ public:
     {
         misiones = nombres;
     }
-
+    //ELIMINAR?
     string obtenerCiudadPorId(int idCiudad)
     {
         return ciudades[idCiudad];

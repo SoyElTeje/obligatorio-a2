@@ -1,4 +1,4 @@
-#include "definiciones.cpp"
+#include "../definiciones.cpp"
 using namespace std;
 #include <limits.h>
 
@@ -52,28 +52,6 @@ class GrafoLista {
 					}
 					actual = actual->sig;
 				}
-			}
-		}
-
-		void mitadPesoArista1(int origen, int destino) {
-			Arista* actual = vertices[origen];
-			while (actual != NULL) {
-				if (actual->destino == destino) {
-					actual->peso /= 2;
-					break;
-				}
-				actual = actual->sig;
-			}
-		}
-
-		void mitadPesoArista2(int origen, int destino) {
-			Arista* actual = vertices2[origen];
-			while (actual != NULL) {
-				if (actual->destino == destino) {
-					actual->peso /= 2;
-					break;
-				}
-				actual = actual->sig;
 			}
 		}
         
@@ -168,10 +146,6 @@ class GrafoLista {
 
 		Arista* adyacentes2(int vertice) {
 			return vertices2[vertice];
-		}
-
-		int cantidadVertices() {
-			return cantidadV;
 		}
 
 		void agregarCiudad(int vertice, string ciudad) {
