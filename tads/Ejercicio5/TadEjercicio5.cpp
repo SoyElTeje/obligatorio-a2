@@ -1,7 +1,6 @@
 #include <string>
 #include <iostream>
-#include "definiciones5.cpp"
-#include "colaPrioridadExt.cpp"
+#include "../definiciones5.cpp"
 using namespace std;
 
 class GrafoLista
@@ -96,7 +95,7 @@ public:
     {
         return cantidadV;
     }
-    // ELIMINAR?
+
     void agregarCiudad(int vertice, string ciudad)
     {
         ciudades[vertice] = ciudad;
@@ -179,8 +178,6 @@ private:
     int cantV;
     int *gradoEntrada;
     bool *misionesHechas;
-    bool yaBusqueGrado0;
-    ListaEnteros *misionesGrado0;
 
 public:
     GrafoOT(int cantidadElementos)
@@ -189,8 +186,6 @@ public:
         grafoDependencias = new GrafoLista(cantV, true, false);
         gradoEntrada = new int[cantV + 1]();
         misionesHechas = new bool[cantV + 1]();
-        yaBusqueGrado0 = false;
-        misionesGrado0 = NULL;
     }
 
     ~GrafoOT()
@@ -213,13 +208,6 @@ public:
         while (ady != NULL)
         {
             gradoEntrada[ady->destino]--;
-            if (gradoEntrada[ady->destino] == 0)
-            {
-                ListaEnteros *nueva = new ListaEnteros();
-                nueva->num = ady->destino;
-                nueva->sig = misionesGrado0;
-                misionesGrado0 = nueva;
-            }
             ady = ady->sig;
         }
     }
@@ -239,28 +227,20 @@ public:
         return grafoDependencias->adyacentes(vertice);
     }
 
-    void buscarGrado0()
+    ListaEnteros *queMisionPuedoHacer()
     {
+        ListaEnteros *misiones = NULL;
         for (int i = 1; i <= cantV; i++)
         {
-            if (gradoEntrada[i] == 0)
+            if (gradoEntrada[i] == 0 && !misionesHechas[i])
             {
                 ListaEnteros *nueva = new ListaEnteros();
                 nueva->num = i;
-                nueva->sig = misionesGrado0;
-                misionesGrado0 = nueva;
+                nueva->sig = misiones;
+                misiones = nueva;
             }
         }
-    }
 
-    ListaEnteros *queMisionPuedoHacer()
-    {
-        if (!yaBusqueGrado0)
-        {
-            buscarGrado0();
-            yaBusqueGrado0 = true;
-        }
-        ListaEnteros *misiones = misionesGrado0;
         return misiones;
     }
 };
@@ -277,7 +257,6 @@ private:
     int cantidadCiudades;
 
 public:
-    // ELIMINAR?
     void agregarRuta(int origen, int destino, int peso)
     {
         grafoMisiones->agregarArista(origen, destino, peso);
@@ -287,7 +266,7 @@ public:
     {
         grafoDependencias->agregarDependencia(mision, dependeDe);
     }
-    // ELIMINAR?
+
     void agregarCiudad(int vertice, string ciudad)
     {
         ciudades[vertice] = ciudad;
@@ -326,7 +305,7 @@ public:
     {
         misiones = nombres;
     }
-    // ELIMINAR?
+
     string obtenerCiudadPorId(int idCiudad)
     {
         return ciudades[idCiudad];

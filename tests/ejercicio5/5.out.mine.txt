@@ -1,8 +1,0 @@
-Ciudad inicial: Punta_Del_Este
-Punta_Del_Este -> Londres -> Mision: Desactivar_la_Entidad - Londres - Tiempo de viaje: 910
-Londres -> Tokio -> Mision: Extraer_codigo_fuente - Tokio - Tiempo de viaje: 2147483647
-Tokio -> Roma -> Mision: Obtener_informacion_confidencial - Roma - Tiempo de viaje: 2147483647
-Roma -> New_York -> Mision: Desactivar_servidor - New_York - Tiempo de viaje: 2147483647
-New_York -> Montevideo -> Mision: Recuperar_llave - Montevideo - Tiempo de viaje: 2147483647
-Misiones ejecutadas con éxito.
-Tiempo total de viaje: 906
